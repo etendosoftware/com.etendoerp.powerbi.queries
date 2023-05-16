@@ -1,0 +1,936 @@
+<?xml version="1.0" encoding="UTF-8"?><ob:Openbravo xmlns:ob="http://www.openbravo.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <etpbic_query id="0586AD60768D498AA952CCA6362DDF30" identifier="Clients">
+    <id>0586AD60768D498AA952CCA6362DDF30</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.27Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.27Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Clients</name>
+    <query>
+		SELECT
+			c_bpartner_location.c_bpartner_location_id AS "ID Dirección Cliente",
+			c_bpartner_location.c_bpartner_id AS "ID Cliente",
+			c_bpartner_location.ad_client_id AS "ID Entidad",
+			c_bpartner_location.ad_org_id AS "ID Organización",
+			COALESCE(c_bpartner.value, 'Not Customer Search Key') AS "Código Cliente",
+			REGEXP_REPLACE(COALESCE(c_bpartner.name, 'Not Commercial Name'),'[\n,\r,\t, ]','','g') AS "Nombre Comercial",
+			COALESCE(c_bpartner.name2, 'Not Fiscal Name') AS "Nombre Fiscal",
+			COALESCE(c_bpartner.taxid, 'Not Tax ID') AS "CIF",
+			COALESCE(c_bpartner.value, '') || ' - ' || COALESCE(c_bpartner.name, '')|| ' - ' || 
+			COALESCE(c_bpartner.name2, '') || ' - ' || COALESCE(c_bpartner.taxid, '') as "Cliente",
+			TO_CHAR(c_bpartner.created, 'dd-mm-yyyy') AS "Fecha Alta Cliente",
+			c_bpartner.isactive AS "¿Cliente Activo?",
+			ac.name AS "Agente Comercial del Cliente",
+			ad_user.email  AS "Usuario RLS del Cliente",
+			c_bp_group.name AS "Categoría de Negocio",
+			fin_paymentmethod.name AS "Método de Pago",
+ 			c_paymentterm.name AS "Plazo de Pago",
+ 			TO_CHAR(c_location.created, 'dd-mm-yyyy') as "Fecha Alta Dirección",
+			c_bpartner_location.isactive AS "¿Dirección Activa?",
+			CASE
+				WHEN c_location.address2 ISNULL THEN c_location.address1
+				ELSE c_location.address1 || ', ' || c_location.address2
+ 			END AS "Dirección",
+			c_location.postal AS "Código Postal",
+ 			c_location.city AS "Población",
+ 			COALESCE(COALESCE(c_region.description,c_region.name),c_country_trl.name) AS "Provincia/Región",
+ 			c_country_trl.name AS "País",
+ 			c_bpartner_location.isbillto AS "¿Es Dirección de Facturación?",
+ 			c_bpartner_location.isshipto AS "¿Es Dirección de Envío?",
+ 			c_bpartner_location.phone AS "Teléfono",
+ 			c_bpartner_location.phone2 AS "Teléfono 2",
+			COALESCE(
+				  (SELECT ad_user.name FROM ad_user WHERE ad_user.c_bpartner_id=c_bpartner_location.c_bpartner_id
+					   AND ad_user.c_bpartner_location_id=c_bpartner_location.c_bpartner_location_id),
+				  (SELECT ad_user.name FROM ad_user WHERE ad_user.c_bpartner_id=c_bpartner_location.c_bpartner_id ORDER BY updated DESC LIMIT 1)
+			) AS "Contacto",
+			COALESCE(
+				  (SELECT ad_user.phone FROM ad_user WHERE ad_user.c_bpartner_id=c_bpartner_location.c_bpartner_id
+					  AND ad_user.c_bpartner_location_id=c_bpartner_location.c_bpartner_location_id),
+				(SELECT ad_user.phone FROM ad_user WHERE ad_user.c_bpartner_id=c_bpartner.c_bpartner_id ORDER BY updated DESC LIMIT 1)
+			) AS "Teléfono del Contacto",
+			COALESCE(
+				  (SELECT ad_user.email FROM ad_user WHERE ad_user.c_bpartner_id=c_bpartner_location.c_bpartner_id
+					   AND ad_user.c_bpartner_location_id=c_bpartner_location.c_bpartner_location_id),
+				  (SELECT ad_user.email FROM ad_user WHERE ad_user.c_bpartner_id=c_bpartner_location.c_bpartner_id ORDER BY updated DESC LIMIT 1)
+			) AS "Dirección de correo electrónico del Contacto"
+		FROM
+			c_bpartner_location 
+			LEFT JOIN c_bpartner ON c_bpartner.c_bpartner_id=c_bpartner_location.c_bpartner_id
+			LEFT JOIN c_location ON c_location.c_location_id=c_bpartner_location.c_location_id
+			LEFT JOIN c_region ON c_region.c_region_id=c_location.c_region_id
+			LEFT JOIN c_country ON c_country.c_country_id=c_location.c_country_id
+			LEFT JOIN c_country_trl ON c_country_trl.c_country_id=c_country.c_country_id AND c_country_trl.ad_language='es_ES'
+			LEFT JOIN c_paymentterm ON c_bpartner.c_paymentterm_id=c_paymentterm.c_paymentterm_id
+			LEFT JOIN fin_paymentmethod ON c_bpartner.fin_paymentmethod_id=fin_paymentmethod.fin_paymentmethod_id
+			LEFT JOIN c_bpartner ac ON ac.c_bpartner_id=c_bpartner.salesrep_id
+			LEFT JOIN ad_user ON ad_user.c_bpartner_id=c_bpartner.salesrep_id
+			LEFT JOIN c_bp_group ON c_bp_group.c_bp_group_id=c_bpartner.c_bp_group_id
+			
+		WHERE 
+			 
+			 c_bpartner.iscustomer='Y' or exists(select 1 from c_invoice where c_invoice.issotrx='Y' and c_bpartner_id=c_bpartner.c_bpartner_id)
+
+	
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="0D9AB2DC2F664774B2B413E9A08C1BFE" identifier="Overdue sales invoices">
+    <id>0D9AB2DC2F664774B2B413E9A08C1BFE</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.27Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.27Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Overdue sales invoices</name>
+    <query>
+		SELECT
+			c_invoice.c_invoice_id AS "ID Factura",
+			c_invoice.ad_client_id AS "ID Entidad",
+			c_invoice.ad_org_id AS "ID Organización",
+			c_invoice.documentno || ' - '  || c_bpartner.name AS "Factura",
+			c_order.documentno AS "Pedido",
+			TO_CHAR(c_invoice.dateinvoiced, 'dd-mm-yyyy') as "Fecha Factura",
+			TO_CHAR(c_order.dateordered, 'dd-mm-yyyy') as "Fecha Pedido",
+			c_bpartner.salesrep_id AS "ID Agente Comercial",
+			ac.name AS "Agente Comercial del Cliente",
+			ad_user.email AS "Usuario RLS",
+			c_bpartner.c_bpartner_id AS "ID Cliente",
+			mon.iso_code AS "Moneda Factura",
+			REPLACE(COALESCE(c_order.totallines,0)::text,'.',',') AS "Total Pedido",
+			REPLACE(COALESCE(c_invoice.grandtotal,0)::text,'.',',') AS "Total Factura",
+			REPLACE(COALESCE(c_invoice.totalpaid,0)::text,'.',',') AS "Cantidad Pagada",
+			REPLACE(COALESCE(c_invoice.dueamt,0)::text,'.',',') AS "Cantidad Debida",
+			REPLACE(c_invoice.daystilldue::text,'-','') AS "Días de Retraso",
+			c_location.c_location_id AS "ID Dirección Facturación",
+			COALESCE(deliveryloc.c_bpartner_location_id,c_invoice.c_bpartner_location_id) AS "ID Dirección Envío"
+
+		FROM
+			c_invoice
+			LEFT JOIN c_order ON c_invoice.c_order_id=c_order.c_order_id
+			LEFT JOIN c_bpartner ON c_bpartner.c_bpartner_id=c_invoice.c_bpartner_id
+			LEFT JOIN c_bpartner_location ON c_bpartner_location.c_bpartner_location_id=COALESCE(c_order.c_bpartner_location_id, c_invoice.c_bpartner_location_id)
+			LEFT JOIN c_location ON c_location.c_location_id=c_bpartner_location.c_location_id
+			LEFT JOIN c_bpartner_location deliveryloc ON deliveryloc.c_bpartner_location_id=COALESCE(c_order.Delivery_Location_ID, c_order.c_bpartner_location_id)
+			LEFT JOIN c_paymentterm ON c_invoice.c_paymentterm_id=c_paymentterm.c_paymentterm_id
+			LEFT JOIN fin_paymentmethod ON c_invoice.fin_paymentmethod_id=fin_paymentmethod.fin_paymentmethod_id
+			LEFT JOIN c_bpartner ac ON ac.c_bpartner_id=c_bpartner.salesrep_id
+			LEFT JOIN ad_user ON ad_user.c_bpartner_id=c_bpartner.salesrep_id
+			LEFT JOIN ad_org ON ad_org.ad_org_id=c_invoice.ad_org_id
+			LEFT JOIN ad_client ON ad_client.ad_client_id=c_invoice.ad_client_id
+			LEFT JOIN ad_org le ON le.ad_org_id=ad_org.ad_legalentity_org_id
+			LEFT JOIN c_currency mon ON mon.c_currency_id = c_invoice.c_currency_id
+
+		WHERE c_invoice.docstatus in ('CO','CL')
+			AND c_invoice.issotrx='Y'
+			AND c_invoice.isactive='Y'
+			AND c_invoice.ispaid='N'
+			AND c_invoice.daystilldue&lt;-7
+			
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="0F9A78945A3F4CECB2B3946349DEA3B6" identifier="Last execution">
+    <id>0F9A78945A3F4CECB2B3946349DEA3B6</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.27Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.27Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Last execution</name>
+    <query>SELECT now() AS "Última Ejecución"</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="16A2B48BFC6E449C8B00D584801C1221" identifier="Vendors">
+    <id>16A2B48BFC6E449C8B00D584801C1221</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.27Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.27Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Vendors</name>
+    <query>
+		SELECT
+			c_bpartner.c_bpartner_id AS "ID Proveedor",
+			ad_org.ad_client_id AS "ID Entidad",
+			ad_org.ad_org_id AS "ID Organización",
+			COALESCE(c_bpartner.name,'') || ' - ' || COALESCE(c_bpartner.name2,'') || ' - ' || coalesce(c_bpartner.taxid,'') AS "Proveedor",
+			TO_CHAR(c_bpartner.created, 'dd-mm-yyyy') AS "Fecha Alta Proveedor",
+			c_bp_group.value AS "Tipo de Proveedor",
+			c_bpartner.isactive AS "¿Proveedor Activo?",
+			fin_paymentmethod.name AS "Método de Pago",
+			c_paymentterm.name AS "Plazo de Pago"
+
+		FROM c_bpartner
+			LEFT JOIN c_bp_group ON c_bp_group.c_bp_group_id=c_bpartner.c_bp_group_id
+			LEFT JOIN c_paymentterm ON c_bpartner.po_paymentterm_id=c_paymentterm.c_paymentterm_id
+			LEFT JOIN fin_paymentmethod ON c_bpartner.po_paymentmethod_id=fin_paymentmethod.fin_paymentmethod_id
+			LEFT JOIN ad_org ON ad_org.ad_org_id=c_bpartner.ad_org_id
+		
+		WHERE
+			c_bpartner.isvendor='Y'
+			
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="1F0554D61BEB4949BE871C012359537B" identifier="Overdue purchase invoices">
+    <id>1F0554D61BEB4949BE871C012359537B</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.26Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.26Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Overdue purchase invoices</name>
+    <query>
+		SELECT
+			c_invoice.c_invoice_id AS "ID Factura",
+			c_invoice.ad_client_id AS "ID Entidad",
+			c_invoice.ad_org_id AS "ID Organización",
+			c_invoice.documentno || ' - '  || c_bpartner.name AS "Factura",
+			c_order.documentno AS "Pedido",
+			TO_CHAR(c_invoice.dateinvoiced, 'dd-mm-yyyy') as "Fecha Factura",
+			TO_CHAR(c_order.dateordered, 'dd-mm-yyyy') as "Fecha Pedido",
+			c_bpartner.salesrep_id AS "ID Agente Comercial",
+			ac.name AS "Agente Comercial del Cliente",
+			ad_user.email AS "Usuario RLS",
+			c_bpartner.c_bpartner_id AS "ID Cliente",
+			mon.iso_code AS "Moneda Factura",
+			REPLACE(COALESCE(c_order.totallines,0)::text,'.',',') AS "Total Pedido",
+			REPLACE(COALESCE(c_invoice.grandtotal,0)::text,'.',',') AS "Total Factura",
+			REPLACE(COALESCE(c_invoice.totalpaid,0)::text,'.',',') AS "Cantidad Pagada",
+			REPLACE(COALESCE(c_invoice.dueamt,0)::text,'.',',') AS "Cantidad Debida",
+			REPLACE(c_invoice.daystilldue::text,'-','') AS "Días para siguiente Vto.",
+			c_location.c_location_id AS "ID Dirección Facturación",
+			COALESCE(deliveryloc.c_bpartner_location_id,c_invoice.c_bpartner_location_id) AS "ID Dirección Envío"
+
+		FROM
+			c_invoice
+			LEFT JOIN c_order ON c_invoice.c_order_id=c_order.c_order_id
+			LEFT JOIN c_bpartner ON c_bpartner.c_bpartner_id=c_invoice.c_bpartner_id
+			LEFT JOIN c_bpartner_location ON c_bpartner_location.c_bpartner_location_id=COALESCE(c_order.c_bpartner_location_id, c_invoice.c_bpartner_location_id)
+			LEFT JOIN c_location ON c_location.c_location_id=c_bpartner_location.c_location_id
+			LEFT JOIN c_bpartner_location deliveryloc ON deliveryloc.c_bpartner_location_id=COALESCE(c_order.Delivery_Location_ID, c_order.c_bpartner_location_id)
+			LEFT JOIN c_paymentterm ON c_invoice.c_paymentterm_id=c_paymentterm.c_paymentterm_id
+			LEFT JOIN fin_paymentmethod ON c_invoice.fin_paymentmethod_id=fin_paymentmethod.fin_paymentmethod_id
+			LEFT JOIN c_bpartner ac ON ac.c_bpartner_id=c_bpartner.salesrep_id
+			LEFT JOIN ad_user ON ad_user.c_bpartner_id=c_bpartner.salesrep_id
+			LEFT JOIN ad_org ON ad_org.ad_org_id=c_invoice.ad_org_id
+			LEFT JOIN ad_client ON ad_client.ad_client_id=c_invoice.ad_client_id
+			LEFT JOIN ad_org le ON le.ad_org_id=ad_org.ad_legalentity_org_id
+			LEFT JOIN c_currency mon ON mon.c_currency_id = c_invoice.c_currency_id
+
+		WHERE c_invoice.docstatus in ('CO','CL')
+			AND c_invoice.issotrx&lt;&gt;'Y'
+			AND c_invoice.isactive='Y'
+			AND c_invoice.ispaid='N'
+						
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="2733712D1B7947058042A0DD5D3057EF" identifier="Purchase lines">
+    <id>2733712D1B7947058042A0DD5D3057EF</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.26Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.26Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Purchase lines</name>
+    <query>
+		SELECT
+			c_invoiceline.c_invoiceline_id AS "ID Línea Factura",
+			c_invoiceline.ad_client_id AS "ID Entidad",	
+			c_invoiceline.ad_org_id AS "ID Organización",
+			c_invoice.documentno AS "Factura",
+			c_order.documentno AS "Pedido",
+			TO_CHAR(c_order.created, 'dd-mm-yyyy') AS "Fecha Pedido",
+			TO_CHAR(c_invoice.dateinvoiced, 'dd-mm-yyyy') AS "Fecha Factura",
+			TO_CHAR(c_order.datepromised, 'dd-mm-yyyy') AS "Fecha Comprometida",
+			TO_CHAR(m_inout.movementdate, 'dd-mm-yyyy') AS "Fecha Picking",
+			c_bpartner.c_bpartner_id AS "ID Proveedor",
+			m_product.m_product_id AS "ID Referencia",
+			m_brand.m_brand_id AS "ID Marca",
+			COALESCE(rflt.name,'') AS "Tipo de Elemento",
+			mon.iso_code AS "Moneda Factura",
+			lat.iso_code AS "Moneda Costo",
+			REPLACE(COALESCE(c_invoiceline.pricelist,0)::text,'.',',') AS "Precio Unitario Lista",
+			REPLACE(COALESCE(c_invoiceline.priceactual,0)::text,'.',',') AS "Precio Unitario Final",
+			REPLACE(COALESCE(c_invoiceline.qtyinvoiced,0)::text,'.',',') AS "Unidades",
+			REPLACE(COALESCE(c_invoiceline.linenetamt,0)::text,'.',',') AS "Importe Neto",
+			REPLACE(COALESCE(lat.cost, 0)::text, '.', ',') AS "Coste Unitario",
+			REPLACE(COALESCE(c_invoiceline.qtyinvoiced * lat.cost, 0)::text, '.', ',') AS "Coste Neto",
+			c_location.c_location_id AS "ID Dirección Facturación",
+			COALESCE(deliveryloc.c_bpartner_location_id,c_invoice.c_bpartner_location_id) AS "ID Dirección Procedencia"
+		
+		FROM
+			c_invoiceline
+			INNER JOIN c_invoice ON c_invoice.c_invoice_id=c_invoiceline.c_invoice_id
+			INNER JOIN c_bpartner ON c_bpartner.c_bpartner_id=c_invoice.c_bpartner_id
+			LEFT JOIN c_bpartner_location ON c_bpartner_location.c_bpartner_location_id=c_invoice.c_bpartner_location_id
+			LEFT JOIN c_currency mon ON mon.c_currency_id = c_invoice.c_currency_id
+			LEFT JOIN c_location ON c_location.c_location_id=c_bpartner_location.c_location_id
+			LEFT JOIN c_country ON c_country.c_country_id=c_location.c_country_id
+			LEFT JOIN c_country_trl ON c_country_trl.c_country_id=c_country.c_country_id
+			LEFT JOIN c_region ON c_region.c_region_id=c_location.c_region_id
+			LEFT JOIN m_product ON m_product.m_product_id=c_invoiceline.m_product_id
+			left join ad_ref_list rfl on rfl.ad_reference_id='270' and rfl.value=m_product.productType
+			left join ad_ref_list_trl rflt on rfl.ad_ref_list_id=rflt.ad_ref_list_id
+			LEFT JOIN m_product_category ON m_product_category.m_product_category_id=m_product.m_product_category_id
+			LEFT JOIN m_brand ON m_brand.m_brand_id=m_product.m_brand_id
+			LEFT JOIN c_orderline ON c_orderline.c_orderline_id = c_invoiceline.c_orderline_id
+			LEFT JOIN m_transaction ON m_transaction.m_inoutline_id=c_invoiceline.m_inoutline_id
+			LEFT JOIN m_inoutline ON m_inoutline.m_inoutline_id=c_invoiceline.m_inoutline_id
+			LEFT JOIN m_inout ON m_inout.m_inout_id=m_inoutline.m_inout_id
+			LEFT JOIN c_order ON c_order.c_order_id = c_orderline.c_order_id
+			LEFT JOIN c_bpartner_location deliveryloc ON deliveryloc.c_bpartner_location_id=COALESCE(c_order.delivery_location_id, c_order.c_bpartner_location_id)
+			LEFT JOIN c_location location2 ON location2.c_location_id=COALESCE(deliveryloc.c_location_id,c_location.c_location_id)
+			LEFT JOIN c_country country2 ON country2.c_country_id=location2.c_country_id
+			LEFT JOIN c_country_trl countrytrl2 ON countrytrl2.c_country_id=country2.c_country_id AND countrytrl2.ad_language='es_ES'
+			LEFT JOIN c_region region2 ON region2.c_region_id=location2.c_region_id
+			LEFT JOIN ad_org ON ad_org.ad_org_id=c_invoiceline.ad_org_id
+			LEFT JOIN ad_org le ON le.ad_org_id=ad_org.ad_legalentity_org_id
+			LEFT JOIN LATERAL (SELECT il.c_invoiceline_id                   as invline_id,
+                                   coalesce(c_currency.iso_code,'0') as iso_code,
+                                   coalesce(m_costing.cost, 0)           as cost
+                            FROM c_invoiceline il
+                                     INNER JOIN c_invoice inv ON il.c_invoice_id = inv.c_invoice_id
+                                     left join
+                                 m_costing on il.m_product_id = m_costing.m_product_id
+                                     inner join c_currency on m_costing.c_currency_id = c_currency.c_currency_id
+                            WHERE inv.dateinvoiced &gt;= m_costing.datefrom
+                              AND inv.dateinvoiced &lt; m_costing.dateto
+                              AND il.c_invoiceline_id = c_invoiceline.c_invoiceline_id
+							  order by m_costing.m_costing_id asc 
+                            limit 1 ) as lat on c_invoiceline.c_invoiceline_id = lat.invline_id
+			
+			WHERE 
+				c_invoice.docstatus IN ('CO','CL','VO')
+				AND c_invoice.issotrx&lt;&gt;'Y'
+				AND c_invoiceline.isactive='Y'
+
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="2C8F2E7810874E74812A2E373D23DB5C" identifier="Last date invoiced">
+    <id>2C8F2E7810874E74812A2E373D23DB5C</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.16Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.16Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Last date invoiced</name>
+    <query>SELECT dateinvoiced::date FROM c_invoice ORDER BY dateinvoiced DESC LIMIT 1</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="4993EA412E39482196019F43B40CA712" identifier="Currencies">
+    <id>4993EA412E39482196019F43B40CA712</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.16Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.16Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Currencies</name>
+    <query>
+		SELECT 
+			c_invoice.c_currency_id AS "ID de Moneda", 
+			c_currency.description AS "Nombre Moneda", 
+			c_currency.iso_code AS "Código Moneda"
+
+		FROM c_invoice 
+			LEFT JOIN c_currency ON c_currency.c_currency_id=c_invoice.c_currency_id
+
+		WHERE c_invoice.issotrx='Y'
+
+		GROUP BY "ID de Moneda","Nombre Moneda","Código Moneda"
+
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="507FFB71D23E430D98069F9CA1B922A9" identifier="Inclusion/Exclusion configuration">
+    <id>507FFB71D23E430D98069F9CA1B922A9</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.15Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.15Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Inclusion/Exclusion configuration</name>
+    <query>SELECT *
+		FROM ETBI_IE_CONFIGURATIONS</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="569A673F759043D58B6BBA50A5D12881" identifier="Sales lines">
+    <id>569A673F759043D58B6BBA50A5D12881</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.15Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.15Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Sales lines</name>
+    <query>
+SELECT c_invoiceline.c_invoiceline_id                                  AS "ID Línea Factura",
+       c_invoiceline.ad_client_id                                      AS "ID Entidad",
+       c_invoiceline.ad_org_id                                         AS "ID Organización",
+       c_invoice.documentno                                            AS "Factura",
+       c_order.documentno                                              AS "Pedido",
+       COALESCE(MIL.documentno, m_inout.documentno)                    AS "Albarán",
+       TO_CHAR(c_invoice.dateinvoiced, 'dd-mm-yyyy')                   AS "Fecha Factura",
+	   TO_CHAR(c_invoice.DateAcct, 'dd-mm-yyyy')                   	   AS "Fecha Contable",
+       TO_CHAR(c_order.dateordered, 'dd-mm-yyyy')                      AS "Fecha Pedido",
+       
+	   COALESCE(TO_CHAR(MIL.movementdate, 'dd-mm-yyyy'),
+                TO_CHAR(m_inout.movementdate, 'dd-mm-yyyy'))           AS "Fecha Picking",
+       
+	   m_warehouse.m_warehouse_id                                      AS "ID Almacén",
+       c_return_reason.name                                            AS "Motivo de la Devolución",
+       c_bpartner.c_bpartner_id                                        AS "ID Cliente",
+       cbpid.name                                                      AS "Agente Comercial que hizo la Venta",
+       m_product.m_product_id                                          AS "ID Referencia",
+       m_brand.m_brand_id                                              AS "ID Marca",
+       m_brand.name                                                    AS "Marca",
+       mon.iso_code                                                    AS "Moneda Factura",
+       lat.iso_code                                                    as "Moneda Costo",
+       m_pricelist.name                                                AS "Tarifa Aplicada",
+       m_pricelist.description                                         AS "Descripción Tarifa",
+       REPLACE(COALESCE(c_invoiceline.pricelist, 0)::text, '.', ',')
+                                                                       AS "Precio Unitario Lista",
+       REPLACE(COALESCE(c_invoiceline.priceactual, 0)::text, '.', ',')
+                                                                       AS "Precio Unitario Final",
+       REPLACE(COALESCE(c_invoiceline.qtyinvoiced, 0)::text, '.', ',') AS "Unidades",
+       REPLACE(COALESCE(c_invoiceline.linenetamt, 0)::text, '.', ',')
+                                                                       AS "Importe Neto",
+       REPLACE(COALESCE(lat.cost, 0)::text, '.', ',')				   AS "Coste Unitario",
+       
+       REPLACE(COALESCE(c_invoiceline.qtyinvoiced * lat.cost, 0)::text, '.', ',')
+                                                                       AS "Coste Neto",
+       
+       c_location.c_location_id                                        AS "ID Dirección Facturación",
+       COALESCE(deliveryloc.c_bpartner_location_id,
+                c_invoice.c_bpartner_location_id)                      AS "ID Dirección Envío",
+       c_invoice.c_doctypetarget_id                                    AS "ID Tipo Documento"
+FROM c_invoiceline
+         inner JOIN c_invoice ON c_invoice.c_invoice_id = c_invoiceline.c_invoice_id AND
+                                 c_invoice.docstatus in ('CO', 'CL', 'VO') AND c_invoice.issotrx = 'Y'
+         inner JOIN c_bpartner ON c_bpartner.c_bpartner_id = c_invoice.c_bpartner_id
+         LEFT JOIN c_bpartner_location ON c_bpartner_location.c_bpartner_location_id = c_invoice.c_bpartner_location_id
+         LEFT JOIN c_location ON c_location.c_location_id = c_bpartner_location.c_location_id
+         LEFT JOIN c_country ON c_country.c_country_id = c_location.c_country_id
+         LEFT JOIN c_country_trl ON c_country_trl.c_country_id = c_country.c_country_id AND c_country_trl.ad_language = 'es_ES'
+         LEFT JOIN c_region ON c_region.c_region_id = c_location.c_region_id
+         LEFT JOIN m_product ON m_product.m_product_id = c_invoiceline.m_product_id
+         LEFT JOIN m_brand on m_brand.m_brand_id = m_product.m_brand_id
+         LEFT JOIN c_orderline ON c_orderline.c_orderline_id = c_invoiceline.c_orderline_id
+         LEFT JOIN c_return_reason ON c_return_reason.c_return_reason_id = c_orderline.c_return_reason_id
+         LEFT JOIN m_transaction ON m_transaction.m_inoutline_id = c_invoiceline.m_inoutline_id
+         LEFT JOIN m_inoutline ON m_inoutline.m_inoutline_id = c_invoiceline.m_inoutline_id
+         LEFT JOIN m_inoutline MIOL ON MIOL.m_inoutline_id = c_orderline.m_inoutline_id
+         LEFT JOIN m_inout MIL ON MIL.m_inout_id = MIOL.m_inout_id
+         LEFT JOIN ad_user ON ad_user.ad_user_id = MIL.ad_user_id
+         LEFT JOIN ad_user adun ON adun.ad_user_id = c_invoice.salesrep_id
+         LEFT JOIN c_bpartner cbpid ON cbpid.c_bpartner_id = adun.c_bpartner_id
+         LEFT JOIN c_currency mon ON mon.c_currency_id = c_invoice.c_currency_id
+         LEFT JOIN m_inout ON m_inout.m_inout_id = m_inoutline.m_inout_id
+         LEFT JOIN c_order ON c_order.c_order_id = c_orderline.c_order_id
+         LEFT JOIN m_pricelist ON m_pricelist.m_pricelist_id = c_invoice.m_pricelist_id
+         LEFT JOIN c_bpartner_location deliveryloc ON deliveryloc.c_bpartner_location_id = COALESCE(c_order.delivery_location_id, c_order.c_bpartner_location_id)
+         LEFT JOIN c_location location2 ON location2.c_location_id = COALESCE(deliveryloc.c_location_id, c_location.c_location_id)
+         LEFT JOIN c_country country2 ON country2.c_country_id = location2.c_country_id
+         LEFT JOIN c_country_trl countrytrl2 ON countrytrl2.c_country_id = country2.c_country_id AND countrytrl2.ad_language = 'es_ES'
+         LEFT JOIN c_region region2 ON region2.c_region_id = location2.c_region_id
+         LEFT JOIN ad_org ON ad_org.ad_org_id = c_invoiceline.ad_org_id
+         LEFT JOIN ad_org le ON le.ad_org_id = ad_org.ad_legalentity_org_id
+		 LEFT JOIN c_invoice_reverse on c_invoice_reverse.c_invoice_id=c_invoice.c_invoice_id
+		 LEFT JOIN c_invoice originvoice on c_invoice_reverse.Reversed_C_Invoice_ID=originvoice.c_invoice_id
+		 LEFT JOIN c_doctype on c_doctype.C_DocType_ID = c_invoice.C_DocTypeTarget_ID
+		 LEFT JOIN c_doctype doc on c_invoice.c_doctypetarget_id = doc.c_doctype_id
+         LEFT JOIN m_warehouse ON m_warehouse.m_warehouse_id = c_order.m_warehouse_id
+		 LEFT JOIN LATERAL (SELECT il.c_invoiceline_id               as invline_id,
+                                   coalesce(c_currency.iso_code, '') as iso_code,
+						   		   coalesce (c_currency.c_currency_id, '') as currency_id,
+                                   coalesce(m_costing.cost, 0)       as cost
+                            FROM c_invoiceline il
+                                     INNER JOIN c_invoice inv ON il.c_invoice_id = inv.c_invoice_id
+                                     left join
+                                 m_costing on il.m_product_id = m_costing.m_product_id
+                                     inner join c_currency on m_costing.c_currency_id = c_currency.c_currency_id
+                            WHERE 
+								(case when doc.isreversal = 'N' then
+								inv.dateacct else originvoice.dateacct
+								end) &gt;= m_costing.datefrom
+                              AND 
+								  (case when doc.isreversal = 'N' then
+								inv.dateacct else originvoice.dateacct
+								end) &lt; m_costing.dateto
+                              AND il.c_invoiceline_id = c_invoiceline.c_invoiceline_id
+                            order by m_costing.m_costing_id asc limit 1 ) as lat on c_invoiceline.c_invoiceline_id = lat.invline_id
+
+WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
+	AND c_invoice.issotrx = 'Y'
+	AND c_invoiceline.isactive = 'Y'
+	
+			
+</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="6176D54B3C3D4439A3AB8BD09B4B913E" identifier="Lines sent">
+    <id>6176D54B3C3D4439A3AB8BD09B4B913E</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.15Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.15Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Lines sent</name>
+    <query>
+		SELECT
+				m_inoutline.m_inoutline_id AS "ID Línea Albarán",
+				m_inoutline.m_product_id AS "ID Referencia",
+ 				m_inout.ad_client_id AS "ID Entidad",
+ 				m_inout.ad_org_id AS "ID Organización",
+ 				m_inout.documentno AS "Albarán",
+ 				TO_CHAR(c_invoice.dateinvoiced, 'dd-mm-yyyy') AS "Fecha Factura",
+ 				m_inout.c_bpartner_id AS "ID Cliente",
+ 				m_inout.c_bpartner_location_id AS "ID Dirección Envío",
+ 				m_warehouse.name AS "Almacén",
+ 				ad_user.name AS "Operario",
+ 				TO_CHAR(m_inout.movementdate, 'dd-mm-yyyy') AS "Fecha del Picking",
+ 				REPLACE(COALESCE(m_inoutline.movementqty,0)::text,'.',',') AS "Nº Ítems Enviados",
+				REPLACE(COALESCE(c_invoiceline.priceactual* m_inoutline.movementqty, 0)::text,'.',',') AS "Importe de los Productos Enviados"
+		FROM
+				m_inoutline
+				LEFT JOIN m_inout ON m_inoutline.m_inout_id=m_inout.m_inout_id
+ 				LEFT JOIN ad_user ON ad_user.ad_user_id=m_inout.ad_user_id
+				LEFT JOIN c_orderline ON c_orderline.c_orderline_id=m_inoutline.c_orderline_id
+				LEFT JOIN c_invoiceline ON m_inoutline.m_inoutline_id=c_invoiceline.m_inoutline_id
+				LEFT JOIN c_invoice ON c_invoice.c_invoice_id=c_invoiceline.c_invoice_id
+ 				LEFT JOIN m_warehouse ON m_warehouse.m_warehouse_id=m_inout.m_warehouse_id
+
+		WHERE
+				m_inoutline.isactive='Y'
+				AND m_inout.issotrx='Y'
+</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="8042D50AB7C7402D898277C2848C9CF7" identifier="Brands">
+    <id>8042D50AB7C7402D898277C2848C9CF7</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.14Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.14Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Brands</name>
+    <query>
+		SELECT
+			m_brand.m_brand_id AS "ID Marca",
+			m_brand.name AS "Marca",
+			TO_CHAR(m_brand.created, 'dd-mm-yyyy') AS "Facha Alta Marca",
+			m_brand.description AS "Descripción",
+			m_brand.isactive AS "¿Marca Activa?"
+		
+		FROM
+			m_brand
+</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="854CFACFDF8A41E79E4F6B3BF0B3AF41" identifier="Received lines">
+    <id>854CFACFDF8A41E79E4F6B3BF0B3AF41</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.14Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.14Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Received lines</name>
+    <query>
+		SELECT
+				m_inoutline.m_inoutline_id AS "ID Línea Albarán",
+				m_inoutline.m_product_id AS "ID Referencia",
+ 				m_inout.ad_client_id AS "ID Entidad",
+ 				m_inout.ad_org_id AS "ID Organización",
+ 				m_inout.documentno AS "Albarán",
+ 				m_inout.c_bpartner_id AS "ID Cliente",
+ 				m_inout.c_bpartner_location_id AS "ID Dirección Envío",
+ 				m_warehouse.name AS "Almacén",
+ 				ad_user.name AS "Operario",
+ 				TO_CHAR(m_inout.movementdate, 'dd-mm-yyyy') AS "Fecha de Recepción",
+ 				REPLACE(COALESCE(m_inoutline.movementqty,0)::text,'.',',') AS "Nº Ítems Recibidos",
+				REPLACE(COALESCE((round(avg(c_invoiceline.priceactual),2)* m_inoutline.movementqty), 0)::text,'.',',') AS "Importe de los Productos Recibidos"
+		FROM
+				m_inoutline
+				LEFT JOIN m_inout ON m_inoutline.m_inout_id=m_inout.m_inout_id
+ 				LEFT JOIN ad_user ON ad_user.ad_user_id=m_inout.ad_user_id
+				LEFT JOIN c_orderline ON c_orderline.c_orderline_id=m_inoutline.c_orderline_id
+				LEFT JOIN c_invoiceline ON m_inoutline.m_inoutline_id=c_invoiceline.m_inoutline_id
+				LEFT JOIN c_invoice ON c_invoice.c_invoice_id=c_invoiceline.c_invoice_id
+ 				LEFT JOIN m_warehouse ON m_warehouse.m_warehouse_id=m_inout.m_warehouse_id
+
+		WHERE
+				m_inoutline.isactive='Y'
+				AND m_inout.issotrx&lt;&gt;'Y'
+		GROUP BY m_inoutline.m_inoutline_id, m_inout.ad_client_id, m_inout.ad_org_id, m_inout.documentno, m_inout.c_bpartner_id,
+		m_inout.c_bpartner_location_id, m_warehouse.name, ad_user.name, m_inout.movementdate
+</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="AACC91CCB3CD4E209E38238C81466F0C" identifier="Products">
+    <id>AACC91CCB3CD4E209E38238C81466F0C</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.14Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.14Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Products</name>
+    <query>
+		SELECT
+			m_product.ad_client_id AS "ID Entidad",
+			m_product.ad_org_id AS "ID Organización",
+			m_product.m_product_id AS "ID Producto",
+			COALESCE(m_product.value, '-') || ' - ' || coalesce(m_product.name,'-') AS "Producto",
+			m_product.discontinued AS "¿Producto Descatalogado?",
+			m_product_category.name AS "Categoría de Producto",
+			m_product.isactive AS "¿Producto Activo?"
+		
+		FROM m_product
+			LEFT JOIN m_product_category ON m_product_category.m_product_category_id=m_product.m_product_category_id
+
+		WHERE
+ 			m_product.isgeneric='Y'
+
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="BB47A95479644251971423D47287DFDE" identifier="References">
+    <id>BB47A95479644251971423D47287DFDE</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.13Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.13Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>References</name>
+    <query>
+		SELECT
+			m_product.m_product_id AS "ID Referencia",
+			m_product.ad_client_id AS "ID Entidad",
+			m_product.ad_org_id AS "ID Organización",
+			m_product.value AS "Código Referencia",
+			COALESCE(m_product.value, ' ') || ' - ' || COALESCE(m_product.name,' ') AS "Referencia",
+			TO_CHAR(m_product.created, 'dd-mm-yyyy') AS "Fecha Alta Referencia",
+			m_product.isactive AS "¿Referencia Activa?",
+			m_product.discontinued AS "¿Referencia Descatalogada?",
+			m_product.isstocked AS "¿Referencia Almacenada?",
+			m_product.generic_product_id AS "ID Producto Genérico",
+			m_product.production as "¿Producto para Producción?",
+			m_brand.name AS "Marca",
+			TO_CHAR(m_brand.created, 'dd-mm-yyyy') AS "Fecha Alta Marca",
+			REGEXP_REPLACE(m_brand.description,'[\n,\r,\t]',' ','g') AS "Descripción Marca",
+			m_brand.isactive AS "¿Marca Activa?",
+			m_product.c_bpartner_id AS "ID Proveedor",
+			c_country.name AS "País Origen Referencia",
+			REGEXP_REPLACE(m_product_category.name,'[\n,\r,\t]','','g') AS "Categoria Producto",
+			COALESCE(rflt.name,'') AS "Tipo de Elemento",
+			REPLACE(SUM(m_storage_detail.qtyonhand)::text,'.',',') AS "Unidades en Stock",
+			REPLACE((SUM(m_storage_detail.qtyonhand)-SUM(m_storage_detail.reservedqty))::text,'.',',') AS "Unidades Disponibles"
+
+		FROM m_product
+			LEFT JOIN m_brand ON m_brand.m_brand_id=m_product.m_brand_id
+			left join ad_ref_list rfl on rfl.ad_reference_id='270' and rfl.value=m_product.productType
+			left join ad_ref_list_trl rflt on rfl.ad_ref_list_id=rflt.ad_ref_list_id
+			LEFT JOIN m_product_category ON m_product_category.m_product_category_id=m_product.m_product_category_id
+			LEFT JOIN c_uom ON m_product.c_uom_weight_id=c_uom.c_uom_id
+			LEFT JOIN m_storage_detail ON m_product.m_product_id=m_storage_detail.m_product_id
+			LEFT JOIN m_locator ON m_locator.m_locator_id=m_storage_detail.m_locator_id
+			LEFT JOIN m_warehouse ON m_warehouse.m_warehouse_id=m_locator.m_warehouse_id
+			LEFT JOIN c_country ON c_country.c_country_id=m_product.m_locator_id
+
+		WHERE
+			m_product.isgeneric &lt;&gt; 'Y'
+
+		GROUP BY 
+		"ID Entidad","ID Organización","ID Referencia","Marca", "Fecha Alta Marca","Descripción Marca","¿Marca Activa?","País Origen Referencia",
+		"Categoria Producto","Tipo de Elemento"
+			
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="BF9358DD43F34580B01A4F66C705E074" identifier="Entity">
+    <id>BF9358DD43F34580B01A4F66C705E074</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.13Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.13Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Entity</name>
+    <query>
+		SELECT
+		ad_client.ad_client_id AS "ID Entidad",
+		ad_client.value AS "Entidad",
+		ad_client.name AS "Nombre Entidad",
+		ad_client.description AS "Descripción Entidad",
+		ad_client.isactive AS "¿Entidad Activa?",
+		TO_CHAR(ad_client.created,'dd-mm-yyyy') AS "Fecha creación Entidad",
+		ad_client.c_currency_id AS "ID Moneda",
+		c_currency.iso_code AS "Código Moneda",
+		c_currency.cursymbol AS "Símbolo Moneda",
+		c_currency.description AS "Nombre Moneda"
+	
+	FROM 
+		ad_client
+		LEFT JOIN c_currency ON c_currency.c_currency_id=ad_client.c_currency_id	
+	
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="C1F0E82F5F06429A9342B58B76238E38" identifier="Fiscal periods">
+    <id>C1F0E82F5F06429A9342B58B76238E38</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.12Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.12Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Fiscal periods</name>
+    <query>
+		SELECT
+			c_period.ad_client_id AS "ID Entidad",
+			c_period.ad_org_id AS "ID Organización",
+			c_year.year AS "Año",
+			c_period.periodno AS "Mes",
+			c_period.name AS "Periodo Fiscal",
+			TO_CHAR(c_period.startdate, 'dd-mm-yyyy') AS "Fecha Inicio Período",
+			TO_CHAR(c_period.enddate, 'dd-mm-yyyy') AS "Fecha Fin Período",
+			(SELECT CASE
+					WHEN (max(pc.periodstatus) = min(pc.periodstatus) AND min(pc.periodstatus) = 'O') THEN 'O'
+					WHEN (max(pc.periodstatus) = min(pc.periodstatus) AND min(pc.periodstatus) ='C') THEN 'C'
+					WHEN (max(pc.periodstatus) = min(pc.periodstatus) AND min(pc.periodstatus) ='P') THEN 'P'
+					WHEN (max(pc.periodstatus) = min(pc.periodstatus) AND min(pc.periodstatus) = 'N') THEN 'N'
+				ELSE 'M'
+			END) AS "Estado Período"
+		
+		FROM
+			c_period
+			left join c_year on c_year.c_year_id=c_period.c_year_id
+			left join c_periodcontrol pc on pc.c_period_id=c_period.c_period_id
+		
+		group by c_period.ad_client_id, c_period.ad_org_id, c_year.year, c_period.periodno, c_period.name, c_period.startdate, c_period.enddate
+		order by c_year.year, c_period.periodno
+		
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="D05F6242044C4C97BE745AC2789700E4" identifier="Organizations">
+    <id>D05F6242044C4C97BE745AC2789700E4</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.12Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.12Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Organizations</name>
+    <query>
+		SELECT
+			ad_org.ad_client_id AS "ID Entidad",	
+			ad_org.ad_org_id AS "ID Organización",
+			ad_org.value || ' (' || c_currency.cursymbol || ')' AS "Organización",
+			ad_org.description AS "Descripción",
+			ad_org.isactive AS "¿Organización Activa?",
+			TO_CHAR(ad_org.created,'dd-mm-yyyy') AS "Fecha Alta Organización",
+			ad_org.issummary AS "¿Es Resumen?",
+			ad_org.ad_orgtype_id AS "Tipo Organización",
+			ad_org.c_currency_id AS "ID Moneda",
+			c_currency.iso_code AS "Código Moneda",
+			c_currency.description AS "Nombre Moneda"
+		FROM 
+			ad_org
+			LEFT JOIN c_currency on c_currency.c_currency_id=ad_org.c_currency_id
+
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="E372613D817A4370998C514795CC3902" identifier="Unbilled purchase order lines">
+    <id>E372613D817A4370998C514795CC3902</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.11Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.11Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Unbilled purchase order lines</name>
+    <query>
+		SELECT
+			c_orderline.c_orderline_id AS "ID Linea Pedido",
+			c_orderline.ad_client_id AS "ID Entidad",
+			c_orderline.ad_org_id AS "ID Organización",
+			c_order.documentno AS "Documento Pedido",
+			TO_CHAR(c_order.dateordered, 'dd-mm-yyyy') AS "Fecha Pedido",
+			TO_CHAR(c_order.DatePromised, 'dd-mm-yyyy') AS "Fecha Comprometida",
+			c_bpartner.c_bpartner_id AS "ID Cliente",
+			adun.name AS "Agente Comercial",
+			adun.email AS "Usuario RLS",	
+			m_product.m_product_id AS "ID Referencia",
+			m_brand.m_brand_id AS "ID Marca",
+			mon.iso_code AS "Moneda Pedido",
+       			lat.iso_code AS "Moneda Costo",
+			m_pricelist.name AS "Precio aplicado",
+			m_pricelist.description AS "Descripción Precio Aplicado",
+			REPLACE(COALESCE(c_orderline.pricelist,0)::text,'.',',') AS "Precio Unitario Lista",
+			REPLACE(COALESCE(c_orderline.priceactual,0)::text,'.',',') AS "Precio Unitario Final",
+			REPLACE(COALESCE(c_orderline.qtydelivered,0)::text,'.',',') AS "Unidades",
+			REPLACE(COALESCE(c_orderline.linenetamt,0)::text,'.',',') AS "Importe Neto",
+			REPLACE(COALESCE(lat.cost, 0)::text, '.', ',') AS "Coste Unitario",
+			REPLACE(COALESCE(c_orderline.qtydelivered * lat.cost, 0)::text, '.', ',') AS "Coste Neto",
+			c_location.c_location_id AS  "ID Dirección Facturación",
+			COALESCE(deliveryloc.c_bpartner_location_id,c_order.c_bpartner_location_id) AS "ID Dirección Envío"
+		
+		FROM
+			c_orderline
+			LEFT JOIN c_order ON c_order.c_order_id=c_orderline.c_order_id 
+			LEFT JOIN m_pricelist ON m_pricelist.m_pricelist_id=c_order.m_pricelist_id
+			LEFT JOIN c_invoice ON c_invoice.c_order_id=c_order.c_order_id
+			LEFT JOIN c_bpartner ON c_bpartner.c_bpartner_id=c_order.c_bpartner_id
+			LEFT JOIN c_bpartner_location ON c_bpartner_location.c_bpartner_location_id=c_order.c_bpartner_location_id
+			LEFT JOIN c_location ON c_location.c_location_id=c_bpartner_location.c_location_id
+			LEFT JOIN c_region ON c_region.c_region_id=c_location.c_region_id
+			LEFT JOIN m_product ON m_product.m_product_id=c_orderline.m_product_id
+			LEFT JOIN m_brand ON m_brand.m_brand_id=m_product.m_brand_id
+			LEFT JOIN m_transaction ON m_transaction.m_inoutline_id=c_orderline.m_inoutline_id
+			LEFT JOIN m_inoutline ON m_inoutline.m_inoutline_id=c_orderline.m_inoutline_id
+			LEFT JOIN m_inout ON m_inout.m_inout_id=m_inoutline.m_inout_id
+			LEFT JOIN ad_user adun ON adun.ad_user_id=c_order.salesrep_id
+			LEFT JOIN c_bpartner cbpid ON cbpid.c_bpartner_id=adun.c_bpartner_id
+			LEFT JOIN c_bpartner_location deliveryloc ON deliveryloc.c_bpartner_location_id=COALESCE(c_order.Delivery_Location_ID, c_order.c_bpartner_location_id)
+			LEFT JOIN c_location location2 ON location2.c_location_id=COALESCE(deliveryloc.c_location_id,c_location.c_location_id)
+			LEFT JOIN c_currency mon ON mon.c_currency_id = c_order.c_currency_id
+			LEFT JOIN c_country country2 ON country2.c_country_id=location2.c_country_id
+			LEFT JOIN c_country_trl countrytrl2 ON countrytrl2.c_country_id=country2.c_country_id
+			LEFT JOIN c_region region2 ON region2.c_region_id=location2.c_region_id
+			LEFT JOIN ad_org ON ad_org.ad_org_id=c_orderline.ad_org_id
+			LEFT JOIN ad_org le ON le.ad_org_id=ad_org.ad_legalentity_org_id
+			LEFT JOIN LATERAL (SELECT il.c_orderline_id AS ordline_id, COALESCE(c_currency.iso_code,'0') AS iso_code,
+                                COALESCE(m_costing.cost, 0) AS cost
+                            	FROM c_orderline il
+                                    INNER JOIN c_order inv ON il.c_order_id = inv.c_order_id
+                                    LEFT JOIN m_costing on il.m_product_id = m_costing.m_product_id
+                                    INNER JOIN c_currency on m_costing.c_currency_id = c_currency.c_currency_id
+                            	WHERE TO_DATE(inv.dateordered, 'dd-mm-yyyy') &gt;= TO_DATE(m_costing.datefrom, 'dd-mm-yyyy')
+                              	AND TO_DATE(inv.dateordered, 'dd-mm-yyyy') &lt; TO_DATE(m_costing.dateto, 'dd-mm-yyyy')
+                                AND il.c_orderline_id = c_orderline.c_orderline_id limit 1 ) AS lat ON c_orderline.c_orderline_id = lat.ordline_id
+
+			WHERE 
+				NOT EXISTS (SELECT * FROM c_orderline c2 WHERE c_order.c_order_id=c2.c_order_id AND c2.qtyinvoiced&lt;&gt;0)
+				AND c_order.docstatus IN ('CO') 
+				AND c_order.issotrx&lt;&gt;'Y'
+			
+			GROUP BY "ID Linea Pedido", "ID Entidad", "ID Organización", "Documento Pedido", "Fecha Pedido","Fecha Comprometida", "ID Cliente", "Agente Comercial", "Usuario RLS",
+			"ID Referencia", "ID Marca", "Moneda Pedido", "Moneda Costo", "Precio aplicado", "Descripción Precio Aplicado", "Precio Unitario Lista", 
+			"Precio Unitario Final", "Unidades", "Importe Neto", "Coste Unitario", "Coste Neto", "ID Dirección Facturación", "ID Dirección Envío"
+
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="F02D006C9F65492CB005FCB1DE8E0F90" identifier="Warehouses">
+    <id>F02D006C9F65492CB005FCB1DE8E0F90</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.11Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.11Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Warehouses</name>
+    <query>
+		SELECT
+			m_warehouse.ad_client_id AS "ID Entidad",
+			m_warehouse.ad_org_id AS "ID Organización",
+			m_warehouse.m_warehouse_id AS "ID Almacén",
+			m_warehouse.value AS "Código Almacén",
+			m_warehouse.name AS "Almacén",
+			m_warehouse.description AS "Descripción Almacén",
+			CASE
+				WHEN c_location.address2 ISNULL THEN c_location.address1
+				ELSE c_location.address1 || ', ' || c_location.address2
+			END AS "Dirección",
+			c_location.postal AS "Código Postal",
+			c_location.city AS "Población",
+			COALESCE(COALESCE(c_region.description,c_region.name),c_country.name) AS "Region",
+			c_country.name AS "País"
+
+		FROM
+			m_warehouse
+			LEFT JOIN c_location ON c_location.c_location_id=m_warehouse.c_location_id
+			LEFT JOIN c_country ON c_country.c_country_id=c_location.c_country_id
+			LEFT JOIN c_region ON c_region.c_region_id=c_location.c_region_id
+		
+	</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="F75838F8E93941EA8F85775EC5AF5FCB" identifier="unbilled sales order lines">
+    <id>F75838F8E93941EA8F85775EC5AF5FCB</id>
+    <active>true</active>
+    <creationDate transient="true">2023-05-10T13:57:26.10Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2023-05-10T13:57:26.10Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>unbilled sales order lines</name>
+    <query>
+		SELECT
+			c_orderline.c_orderline_id AS "ID Linea Pedido",
+			c_orderline.ad_client_id AS "ID Entidad",
+			c_orderline.ad_org_id AS "ID Organización",
+			c_order.documentno AS "Documento Pedido",
+			TO_CHAR(c_order.dateordered, 'dd-mm-yyyy') AS "Fecha Pedido",
+			c_bpartner.c_bpartner_id AS "ID Cliente",
+			adun.name AS "Agente Comercial",
+			adun.email AS "Usuario RLS",	
+			m_product.m_product_id AS "ID Producto",
+			m_brand.m_brand_id AS "ID Marca",
+			mon.iso_code AS "Moneda Pedido",
+       		lat.iso_code AS "Moneda Costo",
+			m_pricelist.name AS "Precio aplicado",
+			m_pricelist.description AS "Descripción Precio Aplicado",
+			REPLACE(COALESCE(c_orderline.pricelist,0)::text,'.',',') AS "Precio Unitario Lista",
+			REPLACE(COALESCE(c_orderline.priceactual,0)::text,'.',',') AS "Precio Unitario Final",
+			REPLACE(COALESCE(c_orderline.qtydelivered,0)::text,'.',',') AS "Unidades",
+			REPLACE(COALESCE(c_orderline.linenetamt,0)::text,'.',',') AS "Importe Neto",
+			REPLACE(COALESCE(lat.cost, 0)::text, '.', ',') AS "Coste Unitario",
+			REPLACE(COALESCE(c_orderline.qtydelivered * lat.cost, 0)::text, '.', ',') AS "Coste Neto",
+			c_location.c_location_id AS  "ID Dirección Facturación",
+			COALESCE(deliveryloc.c_bpartner_location_id,c_order.c_bpartner_location_id) AS "ID Dirección Envío"
+		
+		FROM
+			c_orderline
+			LEFT JOIN c_order ON c_order.c_order_id=c_orderline.c_order_id 
+			LEFT JOIN m_pricelist ON m_pricelist.m_pricelist_id=c_order.m_pricelist_id
+			LEFT JOIN c_invoice ON c_invoice.c_order_id=c_order.c_order_id
+			LEFT JOIN c_bpartner ON c_bpartner.c_bpartner_id=c_order.c_bpartner_id
+			LEFT JOIN c_bpartner_location ON c_bpartner_location.c_bpartner_location_id=c_order.c_bpartner_location_id
+			LEFT JOIN c_location ON c_location.c_location_id=c_bpartner_location.c_location_id
+			LEFT JOIN c_region ON c_region.c_region_id=c_location.c_region_id
+			LEFT JOIN m_product ON m_product.m_product_id=c_orderline.m_product_id
+			LEFT JOIN m_brand ON m_brand.m_brand_id=m_product.m_brand_id
+			LEFT JOIN m_transaction ON m_transaction.m_inoutline_id=c_orderline.m_inoutline_id
+			LEFT JOIN m_inoutline ON m_inoutline.m_inoutline_id=c_orderline.m_inoutline_id
+			LEFT JOIN m_inout ON m_inout.m_inout_id=m_inoutline.m_inout_id
+			LEFT JOIN ad_user adun ON adun.ad_user_id=c_order.salesrep_id
+			LEFT JOIN c_bpartner cbpid ON cbpid.c_bpartner_id=adun.c_bpartner_id
+			LEFT JOIN c_bpartner_location deliveryloc ON deliveryloc.c_bpartner_location_id=COALESCE(c_order.Delivery_Location_ID, c_order.c_bpartner_location_id)
+			LEFT JOIN c_location location2 ON location2.c_location_id=COALESCE(deliveryloc.c_location_id,c_location.c_location_id)
+			LEFT JOIN c_currency mon ON mon.c_currency_id = c_order.c_currency_id
+			LEFT JOIN c_country country2 ON country2.c_country_id=location2.c_country_id
+			LEFT JOIN c_country_trl countrytrl2 ON countrytrl2.c_country_id=country2.c_country_id
+			LEFT JOIN c_region region2 ON region2.c_region_id=location2.c_region_id
+			LEFT JOIN ad_org ON ad_org.ad_org_id=c_orderline.ad_org_id
+			LEFT JOIN ad_org le ON le.ad_org_id=ad_org.ad_legalentity_org_id
+			LEFT JOIN LATERAL (SELECT il.c_orderline_id AS ordline_id, COALESCE(c_currency.iso_code,'0') AS iso_code,
+                                COALESCE(m_costing.cost, 0) AS cost
+                            	FROM c_orderline il
+                                    INNER JOIN c_order inv ON il.c_order_id = inv.c_order_id
+                                    LEFT JOIN m_costing on il.m_product_id = m_costing.m_product_id
+                                    INNER JOIN c_currency on m_costing.c_currency_id = c_currency.c_currency_id
+                            	WHERE TO_DATE(inv.dateordered, 'dd-mm-yyyy') &gt;= TO_DATE(m_costing.datefrom, 'dd-mm-yyyy')
+                              	AND TO_DATE(inv.dateordered, 'dd-mm-yyyy') &lt; TO_DATE(m_costing.dateto, 'dd-mm-yyyy')
+                                AND il.c_orderline_id = c_orderline.c_orderline_id limit 1 ) AS lat ON c_orderline.c_orderline_id = lat.ordline_id
+
+			WHERE 
+				NOT EXISTS (SELECT * FROM c_orderline c2 WHERE c_order.c_order_id=c2.c_order_id AND c2.qtyinvoiced&lt;&gt;0)
+				AND c_order.docstatus IN ('CO') AND c_order.issotrx='Y'
+			
+			GROUP BY "ID Linea Pedido", "ID Entidad", "ID Organización", "Documento Pedido", "Fecha Pedido", "ID Cliente", "Agente Comercial", "Usuario RLS",
+			"ID Producto", "ID Marca", "Moneda Pedido", "Moneda Costo", "Precio aplicado", "Descripción Precio Aplicado", "Precio Unitario Lista", 
+			"Precio Unitario Final", "Unidades", "Importe Neto", "Coste Unitario", "Coste Neto", "ID Dirección Facturación", "ID Dirección Envío"
+
+</query>
+    <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+</ob:Openbravo>
