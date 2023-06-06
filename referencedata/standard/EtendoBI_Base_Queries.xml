@@ -11,8 +11,8 @@
 		SELECT
 			c_bpartner_location.c_bpartner_location_id AS "ID Dirección Cliente",
 			c_bpartner_location.c_bpartner_id AS "ID Cliente",
-			c_bpartner_location.ad_client_id AS "ID Entidad",
-			c_bpartner_location.ad_org_id AS "ID Organización",
+			c_bpartner_location.ad_client_id AS ClientID,
+			c_bpartner_location.ad_org_id AS OrgID,
 			COALESCE(c_bpartner.value, 'Not Customer Search Key') AS "Código Cliente",
 			REGEXP_REPLACE(COALESCE(c_bpartner.name, 'Not Commercial Name'),'[\n,\r,\t, ]','','g') AS "Nombre Comercial",
 			COALESCE(c_bpartner.name2, 'Not Fiscal Name') AS "Nombre Fiscal",
@@ -87,8 +87,8 @@
     <query>
 		SELECT
 			c_invoice.c_invoice_id AS "ID Factura",
-			c_invoice.ad_client_id AS "ID Entidad",
-			c_invoice.ad_org_id AS "ID Organización",
+			c_invoice.ad_client_id AS ClientID,
+			c_invoice.ad_org_id AS OrgID,
 			c_invoice.documentno || ' - '  || c_bpartner.name AS "Factura",
 			c_order.documentno AS "Pedido",
 			TO_CHAR(c_invoice.dateinvoiced, 'dd-mm-yyyy') as "Fecha Factura",
@@ -153,6 +153,8 @@
     <query>
 		SELECT
 			c_bpartner.c_bpartner_id AS "ID Proveedor",
+			c_bpartner.ad_client_id AS ClientID,
+			c_bpartner.ad_org_id AS OrgID,
 			ad_org.ad_client_id AS "ID Entidad",
 			ad_org.ad_org_id AS "ID Organización",
 			COALESCE(c_bpartner.name,'') || ' - ' || COALESCE(c_bpartner.name2,'') || ' - ' || coalesce(c_bpartner.taxid,'') AS "Proveedor",
@@ -185,8 +187,8 @@
     <query>
 		SELECT
 			c_invoice.c_invoice_id AS "ID Factura",
-			c_invoice.ad_client_id AS "ID Entidad",
-			c_invoice.ad_org_id AS "ID Organización",
+			c_invoice.ad_client_id AS ClientID,
+			c_invoice.ad_org_id AS OrgID,
 			c_invoice.documentno || ' - '  || c_bpartner.name AS "Factura",
 			c_order.documentno AS "Pedido",
 			TO_CHAR(c_invoice.dateinvoiced, 'dd-mm-yyyy') as "Fecha Factura",
@@ -239,8 +241,8 @@
     <query>
 		SELECT
 			c_invoiceline.c_invoiceline_id AS "ID Línea Factura",
-			c_invoiceline.ad_client_id AS "ID Entidad",	
-			c_invoiceline.ad_org_id AS "ID Organización",
+			c_invoiceline.ad_client_id AS ClientID,	
+			c_invoiceline.ad_org_id AS OrgID,
 			c_invoice.documentno AS "Factura",
 			c_order.documentno AS "Pedido",
 			TO_CHAR(c_order.created, 'dd-mm-yyyy') AS "Fecha Pedido",
@@ -319,7 +321,7 @@
     <updated transient="true">2023-05-10T13:57:26.16Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Last date invoiced</name>
-    <query>SELECT dateinvoiced::date FROM c_invoice ORDER BY dateinvoiced DESC LIMIT 1</query>
+    <query>SELECT dateinvoiced::date, ad_client_id AS ClientID, ad_org_id AS OrgID FROM c_invoice ORDER BY dateinvoiced DESC LIMIT 1</query>
     <isEtendoBase>true</isEtendoBase>
   </etpbic_query>
   <etpbic_query id="4993EA412E39482196019F43B40CA712" identifier="Currencies">
@@ -333,6 +335,8 @@
     <query>
 		SELECT 
 			c_invoice.c_currency_id AS "ID de Moneda", 
+			c_invoice.ad_client_id AS ClientID,
+			c_invoice.ad_org_id AS OrgID,
 			c_currency.description AS "Nombre Moneda", 
 			c_currency.iso_code AS "Código Moneda"
 
@@ -341,7 +345,7 @@
 
 		WHERE c_invoice.issotrx='Y'
 
-		GROUP BY "ID de Moneda","Nombre Moneda","Código Moneda"
+		GROUP BY "ID de Moneda", ClientID, OrgID, "Nombre Moneda","Código Moneda"
 
 	</query>
     <isEtendoBase>true</isEtendoBase>
@@ -354,7 +358,7 @@
     <updated transient="true">2023-05-10T13:57:26.15Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Inclusion/Exclusion configuration</name>
-    <query>SELECT *
+    <query>SELECT etbi_ie_configurations_id as IncExcID, ad_client_id as ClientID, ad_org_id as OrgID
 		FROM ETBI_IE_CONFIGURATIONS</query>
     <isEtendoBase>true</isEtendoBase>
   </etpbic_query>
@@ -368,8 +372,8 @@
     <name>Sales lines</name>
     <query>
 SELECT c_invoiceline.c_invoiceline_id                                  AS "ID Línea Factura",
-       c_invoiceline.ad_client_id                                      AS "ID Entidad",
-       c_invoiceline.ad_org_id                                         AS "ID Organización",
+       c_invoiceline.ad_client_id AS ClientID,
+       c_invoiceline.ad_org_id AS OrgID,
        c_invoice.documentno                                            AS "Factura",
        c_order.documentno                                              AS "Pedido",
        COALESCE(MIL.documentno, m_inout.documentno)                    AS "Albarán",
@@ -482,6 +486,8 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
     <query>
 		SELECT
 				m_inoutline.m_inoutline_id AS "ID Línea Albarán",
+				m_inoutline.ad_client_id AS ClientID,
+				m_inoutline.ad_org_id AS OrgID,
 				m_inoutline.m_product_id AS "ID Referencia",
  				m_inout.ad_client_id AS "ID Entidad",
  				m_inout.ad_org_id AS "ID Organización",
@@ -520,6 +526,8 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
     <query>
 		SELECT
 			m_brand.m_brand_id AS "ID Marca",
+			m_brand.ad_client_id AS ClientID,
+			m_brand.ad_org_id AS OrgID,
 			m_brand.name AS "Marca",
 			TO_CHAR(m_brand.created, 'dd-mm-yyyy') AS "Facha Alta Marca",
 			m_brand.description AS "Descripción",
@@ -541,6 +549,8 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
     <query>
 		SELECT
 				m_inoutline.m_inoutline_id AS "ID Línea Albarán",
+				m_inoutline.ad_client_id AS ClientID,
+				m_inoutline.ad_org_id AS OrgID,
 				m_inoutline.m_product_id AS "ID Referencia",
  				m_inout.ad_client_id AS "ID Entidad",
  				m_inout.ad_org_id AS "ID Organización",
@@ -579,9 +589,9 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
     <name>Products</name>
     <query>
 		SELECT
-			m_product.ad_client_id AS "ID Entidad",
-			m_product.ad_org_id AS "ID Organización",
 			m_product.m_product_id AS "ID Producto",
+			m_product.ad_client_id AS ClientID,
+			m_product.ad_org_id AS OrgID,
 			COALESCE(m_product.value, '-') || ' - ' || coalesce(m_product.name,'-') AS "Producto",
 			m_product.discontinued AS "¿Producto Descatalogado?",
 			m_product_category.name AS "Categoría de Producto",
@@ -607,8 +617,8 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
     <query>
 		SELECT
 			m_product.m_product_id AS "ID Referencia",
-			m_product.ad_client_id AS "ID Entidad",
-			m_product.ad_org_id AS "ID Organización",
+			m_product.ad_client_id AS ClientID,
+			m_product.ad_org_id AS OrgID,
 			m_product.value AS "Código Referencia",
 			COALESCE(m_product.value, ' ') || ' - ' || COALESCE(m_product.name,' ') AS "Referencia",
 			TO_CHAR(m_product.created, 'dd-mm-yyyy') AS "Fecha Alta Referencia",
@@ -643,7 +653,7 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
 			m_product.isgeneric &lt;&gt; 'Y'
 
 		GROUP BY 
-		"ID Entidad","ID Organización","ID Referencia","Marca", "Fecha Alta Marca","Descripción Marca","¿Marca Activa?","País Origen Referencia",
+		"ID Referencia", ClientID, OrgID, "Marca", "Fecha Alta Marca","Descripción Marca","¿Marca Activa?","País Origen Referencia",
 		"Categoria Producto","Tipo de Elemento"
 			
 	</query>
@@ -660,6 +670,8 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
     <query>
 		SELECT
 		ad_client.ad_client_id AS "ID Entidad",
+		ad_client.ad_client_id AS ClientID,
+		ad_client.ad_org_id AS OrgID,
 		ad_client.value AS "Entidad",
 		ad_client.name AS "Nombre Entidad",
 		ad_client.description AS "Descripción Entidad",
@@ -687,8 +699,9 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
     <name>Fiscal periods</name>
     <query>
 		SELECT
-			c_period.ad_client_id AS "ID Entidad",
-			c_period.ad_org_id AS "ID Organización",
+			c_period.c_period_id AS "Period ID",
+			c_period.ad_client_id AS ClientID,
+			c_period.ad_org_id AS OrgID,
 			c_year.year AS "Año",
 			c_period.periodno AS "Mes",
 			c_period.name AS "Periodo Fiscal",
@@ -707,7 +720,7 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
 			left join c_year on c_year.c_year_id=c_period.c_year_id
 			left join c_periodcontrol pc on pc.c_period_id=c_period.c_period_id
 		
-		group by c_period.ad_client_id, c_period.ad_org_id, c_year.year, c_period.periodno, c_period.name, c_period.startdate, c_period.enddate
+		group by c_period.c_period_id, c_period.ad_client_id, c_period.ad_org_id, c_year.year, c_period.periodno, c_period.name, c_period.startdate, c_period.enddate
 		order by c_year.year, c_period.periodno
 		
 	</query>
@@ -723,8 +736,9 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
     <name>Organizations</name>
     <query>
 		SELECT
-			ad_org.ad_client_id AS "ID Entidad",	
 			ad_org.ad_org_id AS "ID Organización",
+			ad_org.ad_client_id AS ClientID,	
+			ad_org.ad_org_id AS OrgID,
 			ad_org.value || ' (' || c_currency.cursymbol || ')' AS "Organización",
 			ad_org.description AS "Descripción",
 			ad_org.isactive AS "¿Organización Activa?",
@@ -752,8 +766,8 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
     <query>
 		SELECT
 			c_orderline.c_orderline_id AS "ID Linea Pedido",
-			c_orderline.ad_client_id AS "ID Entidad",
-			c_orderline.ad_org_id AS "ID Organización",
+			c_orderline.ad_client_id AS ClientID,
+			c_orderline.ad_org_id AS OrgID,
 			c_order.documentno AS "Documento Pedido",
 			TO_CHAR(c_order.dateordered, 'dd-mm-yyyy') AS "Fecha Pedido",
 			TO_CHAR(c_order.DatePromised, 'dd-mm-yyyy') AS "Fecha Comprometida",
@@ -814,7 +828,7 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
 				AND c_order.docstatus IN ('CO') 
 				AND c_order.issotrx&lt;&gt;'Y'
 			
-			GROUP BY "ID Linea Pedido", "ID Entidad", "ID Organización", "Documento Pedido", "Fecha Pedido","Fecha Comprometida", "ID Cliente", "Agente Comercial", "Usuario RLS",
+			GROUP BY "ID Linea Pedido", ClientID, OrgID, "Documento Pedido", "Fecha Pedido","Fecha Comprometida", "ID Cliente", "Agente Comercial", "Usuario RLS",
 			"ID Referencia", "ID Marca", "Moneda Pedido", "Moneda Costo", "Precio aplicado", "Descripción Precio Aplicado", "Precio Unitario Lista", 
 			"Precio Unitario Final", "Unidades", "Importe Neto", "Coste Unitario", "Coste Neto", "ID Dirección Facturación", "ID Dirección Envío"
 
@@ -831,9 +845,9 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
     <name>Warehouses</name>
     <query>
 		SELECT
-			m_warehouse.ad_client_id AS "ID Entidad",
-			m_warehouse.ad_org_id AS "ID Organización",
 			m_warehouse.m_warehouse_id AS "ID Almacén",
+			m_warehouse.ad_client_id AS ClientID,
+			m_warehouse.ad_org_id AS OrgID,
 			m_warehouse.value AS "Código Almacén",
 			m_warehouse.name AS "Almacén",
 			m_warehouse.description AS "Descripción Almacén",
@@ -866,8 +880,8 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
     <query>
 		SELECT
 			c_orderline.c_orderline_id AS "ID Linea Pedido",
-			c_orderline.ad_client_id AS "ID Entidad",
-			c_orderline.ad_org_id AS "ID Organización",
+			c_orderline.ad_client_id AS ClientID,
+			c_orderline.ad_org_id AS OrgID,
 			c_order.documentno AS "Documento Pedido",
 			TO_CHAR(c_order.dateordered, 'dd-mm-yyyy') AS "Fecha Pedido",
 			c_bpartner.c_bpartner_id AS "ID Cliente",
@@ -926,7 +940,7 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
 				NOT EXISTS (SELECT * FROM c_orderline c2 WHERE c_order.c_order_id=c2.c_order_id AND c2.qtyinvoiced&lt;&gt;0)
 				AND c_order.docstatus IN ('CO') AND c_order.issotrx='Y'
 			
-			GROUP BY "ID Linea Pedido", "ID Entidad", "ID Organización", "Documento Pedido", "Fecha Pedido", "ID Cliente", "Agente Comercial", "Usuario RLS",
+			GROUP BY "ID Linea Pedido", ClientID, OrgID, "Documento Pedido", "Fecha Pedido", "ID Cliente", "Agente Comercial", "Usuario RLS",
 			"ID Producto", "ID Marca", "Moneda Pedido", "Moneda Costo", "Precio aplicado", "Descripción Precio Aplicado", "Precio Unitario Lista", 
 			"Precio Unitario Final", "Unidades", "Importe Neto", "Coste Unitario", "Coste Neto", "ID Dirección Facturación", "ID Dirección Envío"
 
