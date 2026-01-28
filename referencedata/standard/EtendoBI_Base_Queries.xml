@@ -2,9 +2,9 @@
   <etpbic_query id="0586AD60768D498AA952CCA6362DDF30" identifier="Clients">
     <id>0586AD60768D498AA952CCA6362DDF30</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.27Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.68Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.27Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.68Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Clients</name>
     <query>
@@ -76,12 +76,53 @@
 	</query>
     <isEtendoBase>true</isEtendoBase>
   </etpbic_query>
+  <etpbic_query id="06071219D79E4B29943BD07E3A8C9F1F" identifier="Etendo BI Inclusion/Exclusion Configuration">
+    <id>06071219D79E4B29943BD07E3A8C9F1F</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.68Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.68Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Etendo BI Inclusion/Exclusion Configuration</name>
+    <query>SELECT
+    cl.etbiie_ie_config_line_id AS "record_id",
+    cl.ad_client_id AS ClientID,
+    cl.ad_org_id AS OrgID,
+    cl.etbiie_ie_configuration_id AS "ID Configuracion",
+    cl.m_product_id AS "ID Producto",
+    cl.m_product_category_id AS "ID Categoria Producto",
+    cl.c_glitem_id AS "ID Concepto Contable",
+    cl.number_value AS "numero",
+    cl.string_value AS "string",
+    cl.yesno AS "yesno",
+    cl.doctype AS "doc type",
+    cl.c_bpartner_id AS "ID Tercero",
+    cl.c_bp_group_id AS "ID Grupo de Tercero",
+    cl.salesrepresentative AS "ID Sales Representative",
+    cl.c_elementvalue_id AS "ID Cuenta",
+    ev.value AS "Orden Jerarquia",
+    ev.name AS "Cuenta",
+    cl.datefrom AS "Fecha Desde",
+    cl.dateto AS "Fecha Hasta",
+    ie.searchkey AS "Searchkey",
+    ie.name AS "name",
+    ie.description AS "descripcion",
+    ie.etbiie_ie_config_Cat_id AS "ID Categoria configuracion",
+    cat.name AS "Categoria configuracion",
+    ie.created AS "Fecha Creacion",
+    ie.createdby AS "Creado por"
+FROM etbiie_ie_config_line cl
+LEFT JOIN etbiie_ie_configuration ie ON ie.etbiie_ie_configuration_id = cl.etbiie_ie_configuration_id
+LEFT JOIN etbiie_ie_config_cat cat ON cat.etbiie_ie_config_cat_id = ie.etbiie_ie_config_cat_id
+LEFT JOIN c_elementvalue ev ON ev.c_elementvalue_id = cl.c_elementvalue_id</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
   <etpbic_query id="0D9AB2DC2F664774B2B413E9A08C1BFE" identifier="Overdue sales invoices">
     <id>0D9AB2DC2F664774B2B413E9A08C1BFE</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.27Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.68Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.27Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.68Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Overdue sales invoices</name>
     <query>
@@ -131,12 +172,28 @@
 	</query>
     <isEtendoBase>true</isEtendoBase>
   </etpbic_query>
+  <etpbic_query id="0E73BA7467024CDE9BD4D68B672BCAF5" identifier="G/L Item">
+    <id>0E73BA7467024CDE9BD4D68B672BCAF5</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.68Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.68Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>G/L Item</name>
+    <query>SELECT
+    cg.c_glitem_id AS "ID Concepto Contable",
+    cg.ad_client_id AS ClientID,
+    cg.ad_org_id AS OrgID,
+    cg.name AS "Concepto Contable"
+FROM c_glitem cg</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
   <etpbic_query id="0F9A78945A3F4CECB2B3946349DEA3B6" identifier="Last execution">
     <id>0F9A78945A3F4CECB2B3946349DEA3B6</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.27Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.67Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.27Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.67Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Last execution</name>
     <query>SELECT now() AS "Última Ejecución"</query>
@@ -145,9 +202,9 @@
   <etpbic_query id="16A2B48BFC6E449C8B00D584801C1221" identifier="Vendors">
     <id>16A2B48BFC6E449C8B00D584801C1221</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.27Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.67Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.27Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.67Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Vendors</name>
     <query>
@@ -176,12 +233,28 @@
 	</query>
     <isEtendoBase>true</isEtendoBase>
   </etpbic_query>
+  <etpbic_query id="1E594FAF8FC5473CAE91C71CB8747165" identifier="Project">
+    <id>1E594FAF8FC5473CAE91C71CB8747165</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.67Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.67Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Project</name>
+    <query>SELECT
+    p.c_project_id AS "ID Proyecto",
+    p.ad_client_id AS Clientid,
+    p.ad_org_id AS Orgid,
+    p.value AS "Proyecto"
+FROM c_project p</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
   <etpbic_query id="1F0554D61BEB4949BE871C012359537B" identifier="Overdue purchase invoices">
     <id>1F0554D61BEB4949BE871C012359537B</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.26Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.67Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.26Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.67Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Overdue purchase invoices</name>
     <query>
@@ -233,9 +306,9 @@
   <etpbic_query id="2733712D1B7947058042A0DD5D3057EF" identifier="Purchase lines">
     <id>2733712D1B7947058042A0DD5D3057EF</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.26Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.67Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.26Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.67Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Purchase lines</name>
     <query>
@@ -316,20 +389,250 @@
   <etpbic_query id="2C8F2E7810874E74812A2E373D23DB5C" identifier="Last date invoiced">
     <id>2C8F2E7810874E74812A2E373D23DB5C</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.16Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.67Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.16Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.67Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Last date invoiced</name>
     <query>SELECT dateinvoiced::date, ad_client_id AS ClientID, ad_org_id AS OrgID FROM c_invoice ORDER BY dateinvoiced DESC LIMIT 1</query>
     <isEtendoBase>true</isEtendoBase>
   </etpbic_query>
+  <etpbic_query id="32A8F8F585AA49C08E35380609FDA042" identifier="Document Type">
+    <id>32A8F8F585AA49C08E35380609FDA042</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.67Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.67Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Document Type</name>
+    <query>SELECT
+    dt.c_doctype_id AS "ID Tipo de Documento",
+    dt.ad_client_id AS ClientID,
+    dt.ad_org_id AS OrgID,
+    dt.name AS "Tipo de Documento"
+FROM c_doctype dt</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="374CDF129D28456CB7600CF78477422C" identifier="Payment In">
+    <id>374CDF129D28456CB7600CF78477422C</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.67Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.67Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Payment In</name>
+    <query>SELECT
+    ps.fin_payment_schedule_id AS "ID Plan de pagos",
+    ci.ad_client_id AS ClientID,
+    ci.ad_org_id AS OrgID,
+    ci.documentno AS "Nro Documento",
+    ci.c_invoice_id AS "ID Factura",
+    TO_CHAR(ci.dateinvoiced, 'dd-mm-yyyy') AS "Fecha Factura",
+    ci.salesrep_id AS "ID Sales Rep",
+    adun.name AS "Sales rep del Cliente",
+    bp.c_bpartner_id AS "ID Tercero",
+    bp.name AS "Tercero",
+    mon.iso_code AS "Moneda Factura",
+    ci.fin_paymentmethod_id AS "ID Metodo de Pago",
+    ci.c_paymentterm_id AS "ID Condicion de Pago",
+    pmt.name AS "Condicion de Pago",
+    ps.expecteddate AS "Fecha Esperada",
+    ci.c_doctypetarget_id AS "ID Tipo de Documento",
+    doc.name AS "Tipo de Documento",
+    COALESCE(
+        (
+            SELECT MAX(p.paymentdate)
+            FROM fin_payment_scheduledetail psd
+            LEFT JOIN fin_payment_detail pd ON psd.fin_payment_detail_id = pd.fin_payment_detail_id
+            LEFT JOIN fin_payment p ON pd.fin_payment_id = p.fin_payment_id
+            WHERE
+                psd.fin_payment_schedule_invoice = ps.fin_payment_schedule_id
+        ), NULL
+    ) AS "Fecha Último Pago",
+    COALESCE(
+        (
+            SELECT
+            CASE
+                WHEN to_number(trunc((CASE WHEN max(ps.outstandingamt) = 0 THEN max(p.paymentdate) ELSE now() END)) - trunc(min(ps.expecteddate))) &gt; 0
+                THEN to_number(trunc((CASE WHEN max(ps.outstandingamt) = 0 THEN max(p.paymentdate) ELSE now() END)) - trunc(min(ps.expecteddate)))
+                ELSE 0
+            END
+            FROM fin_payment_schedule ps_inner
+            LEFT JOIN fin_payment_scheduledetail psd_inner ON ps_inner.fin_payment_schedule_id = psd_inner.fin_payment_schedule_invoice
+            LEFT JOIN fin_payment_detail pd_inner ON pd_inner.fin_payment_detail_id = psd_inner.fin_payment_detail_id
+            LEFT JOIN fin_payment p ON p.fin_payment_id = pd_inner.fin_payment_id
+            WHERE ps_inner.fin_payment_schedule_id = ps.fin_payment_schedule_id
+            GROUP BY ps_inner.fin_payment_schedule_id
+        ), 0
+    ) AS "Días de Atraso",
+    REPLACE(COALESCE(ps.amount,0)::text,'.',',') as "Importe Esperado",
+    REPLACE(COALESCE(ps.paidamt,0)::text,'.',',') as "Importe Cobrado",
+    REPLACE(COALESCE(ps.outstandingamt,0)::text,'.',',') as "Importe Pendiente"
+FROM c_invoice ci
+LEFT JOIN c_order ord ON ci.c_order_id = ord.c_order_id
+LEFT JOIN c_bpartner bp ON bp.c_bpartner_id = ci.c_bpartner_id
+LEFT JOIN c_paymentterm ON ci.c_paymentterm_id = c_paymentterm.c_paymentterm_id
+LEFT JOIN fin_paymentmethod fp ON ci.fin_paymentmethod_id = fp.fin_paymentmethod_id
+LEFT JOIN ad_org org ON org.ad_org_id = ci.ad_org_id
+LEFT JOIN c_currency mon ON mon.c_currency_id = ci.c_currency_id
+LEFT JOIN fin_payment_schedule ps ON ps.c_invoice_id = ci.c_invoice_id
+LEFT JOIN c_paymentterm pmt on ci.c_paymentterm_id = pmt.c_paymentterm_id
+LEFT JOIN c_doctype doc on ci.c_doctypetarget_id = doc.c_doctype_id
+LEFT JOIN ad_user adun ON adun.ad_user_id = ci.salesrep_id
+WHERE
+    ci.docstatus in ('CO','CL')
+    AND ci.issotrx='Y'
+    AND ci.isactive='Y'
+    AND org.isactive='Y'
+    AND ci.dateinvoiced&gt;='2018-01-01'
+    AND COALESCE (
+        (
+            SELECT MAX(p.paymentdate)
+            FROM fin_payment_scheduledetail psd
+            LEFT JOIN fin_payment_detail pd ON psd.fin_payment_detail_id = pd.fin_payment_detail_id
+            LEFT JOIN fin_payment p ON pd.fin_payment_id = p.fin_payment_id
+            WHERE psd.fin_payment_schedule_invoice = ps.fin_payment_schedule_id
+         ), NULL
+    ) is not null
+GROUP BY
+    ps.fin_payment_schedule_id,
+    ci.c_invoice_id,
+    ci.ad_client_id,
+    ci.ad_org_id,
+    ci.documentno,
+    TO_CHAR(ci.dateinvoiced, 'dd-mm-yyyy'),
+    ci.salesrep_id,
+    adun.name,
+    bp.c_bpartner_id,
+    bp.name,
+    mon.iso_code,
+    ci.fin_paymentmethod_id,
+    ci.c_paymentterm_id,
+    pmt.name,
+    ps.expecteddate,
+    ci.c_doctypetarget_id,
+    doc.name,
+    doc.isreversal</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="37F58B5752544E4E8EBDAE33914C9E84" identifier="Shipments/Receipts">
+    <id>37F58B5752544E4E8EBDAE33914C9E84</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.67Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.67Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Shipments/Receipts</name>
+    <query>SELECT
+    iol.m_inoutline_id AS "ID Remito",
+    iol.ad_client_id AS ClientID,
+    org.ad_org_id AS OrgID,
+    io.documentno AS "número remito",
+    cur.iso_code AS "moneda",
+    cat.name AS "categoria",
+    cat.m_product_category_id AS "ID Categoria",
+    p.name AS "producto",
+    P.m_product_id AS "Id producto",
+    ol.priceactual AS "precio",
+    ol.QtyOrdered AS "cantidad pedida",
+    replace(coalesce(iol.movementqty,0)::text, '.', ',') AS "cantidad recibida",
+    uom.name AS "unidad de medida",
+    attr.description AS "atributos",
+    loc.value AS "Hueco de entrada o salida",
+    loc.m_warehouse_id AS "Almacen ID",
+    TO_DATE(io.created) AS "fecha creacion",
+    u.username AS "creado por",
+    o.documentno AS "pedido de venta o compra",
+    io.issotrx AS "Remito de compra o venta",
+    uom.c_uom_id AS "ID Unidad de Medida",
+    io.movementdate AS "Fecha Movimiento",
+    ol.c_bpartner_id AS "ID Tercero"
+FROM m_inoutline iol
+LEFT JOIN m_locator loc ON loc.m_locator_id=iol.m_locator_id
+LEFT JOIN m_inout io ON io.m_inout_id=iol.m_inout_id
+LEFT JOIN c_doctype dt ON dt.c_doctype_id=io.C_DocType_ID
+LEFT JOIN ad_org org ON org.ad_org_id=io.ad_org_id
+LEFT JOIN c_orderline ol ON ol.c_orderline_id=iol.c_orderline_id
+LEFT JOIN c_order o ON o.c_order_id=ol.c_order_id
+LEFT JOIN c_currency cur ON cur.c_currency_id=o.c_currency_id
+LEFT JOIN c_uom uom ON uom.c_uom_id=ol.c_uom_id
+LEFT JOIN m_product p ON p.m_product_id=iol.m_product_id
+LEFT JOIN m_product_category cat ON cat.m_product_category_id=p.m_product_category_id
+LEFT JOIN ad_user u ON u.ad_user_id=io.createdby
+LEFT JOIN m_attributesetinstance attr ON attr.m_attributesetinstance_id=iol.m_attributesetinstance_id
+WHERE
+    dt.isreturn='N'
+    AND org.isactive='Y'
+    AND io.movementdate &gt;= '2018-01-01'</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="391E102995E14475945F1EF045DAE99E" identifier="Storage Bin">
+    <id>391E102995E14475945F1EF045DAE99E</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.66Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.66Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Storage Bin</name>
+    <query>SELECT
+    loc.m_locator_id as "ID Hueco",
+    loc.ad_client_id AS ClientID,
+    loc.ad_org_id AS OrgID,
+    loc.value as "Hueco"
+FROM m_locator loc</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="3A8991CD35AE467CAA33EEB9C724B204" identifier="Accounting">
+    <id>3A8991CD35AE467CAA33EEB9C724B204</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.66Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.66Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Accounting</name>
+    <query>SELECT
+    fa.fact_acct_id as "Id Fact_Act",
+    fa.ad_client_id AS ClientID,
+    fa.ad_org_id AS OrgID,
+    fa.dateacct AS "Fecha Contable",
+    inv.documentno AS "Numero de Documento",
+    dt.name AS "Tipo de Documento",
+    inv.c_doctypetarget_id AS "ID tipo de documento",
+    acc.value AS "Codigo Jerarquia",
+    acc.name AS "Cuenta",
+    account_id AS "Id Cuenta",
+    fa.m_product_id AS "Id Producto",
+    fa.c_project_id AS "Id Proyecto",
+    fa.c_bpartner_id AS "Id Tercero",
+    fa.c_currency_id AS "ID Moneda",
+    REPLACE(fa.amtacctdr::text,'.',',' ) AS "Debe",
+    REPLACE(fa.amtacctcr::text,'.',',' ) AS "Haber",
+    REPLACE(COALESCE(fa.amtacctdr - fa.amtacctcr, 0)::text, '.', ',') AS "Saldo",
+    mp.name AS "Producto",
+    cb.name AS "Tercero",
+    acc.accountsign AS "Naturaleza Cuenta",
+    acc.accounttype AS "Tipo de Cuenta",
+    REPLACE(REPLACE(fa.description, E'\r', ''), E'\n', ' ') AS "Descripción",
+    fa.record_id as "ID Record"
+FROM fact_acct fa
+INNER JOIN c_elementvalue acc ON fa.account_id = acc.c_elementvalue_id
+LEFT JOIN c_invoice inv ON inv.c_invoice_id = fa.record_id
+LEFT JOIN m_product mp ON fa.m_product_id = mp.m_product_id
+LEFT JOIN c_bpartner cb ON fa.c_bpartner_id = cb.c_bpartner_id
+LEFT JOIN c_doctype doc ON inv.c_doctypetarget_id = doc.c_doctype_id
+LEFT JOIN ad_org org ON fa.ad_org_id = org.ad_org_id
+LEFT JOIN c_doctype dt ON dt.c_doctype_id = inv.c_doctypetarget_id
+WHERE
+    fa.dateacct &gt;= '2018-01-01'
+    AND org.isactive = 'Y'</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
   <etpbic_query id="4993EA412E39482196019F43B40CA712" identifier="Currencies">
     <id>4993EA412E39482196019F43B40CA712</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.16Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.66Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.16Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.66Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Currencies</name>
     <query>
@@ -353,9 +656,9 @@
   <etpbic_query id="507FFB71D23E430D98069F9CA1B922A9" identifier="Inclusion/Exclusion configuration">
     <id>507FFB71D23E430D98069F9CA1B922A9</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.15Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.66Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.15Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.66Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Inclusion/Exclusion configuration</name>
     <query>SELECT etbi_ie_configurations_id as IncExcID, ad_client_id as ClientID, ad_org_id as OrgID
@@ -365,9 +668,9 @@
   <etpbic_query id="569A673F759043D58B6BBA50A5D12881" identifier="Sales lines">
     <id>569A673F759043D58B6BBA50A5D12881</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.15Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.66Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.15Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.66Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Sales lines</name>
     <query>
@@ -475,12 +778,112 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
 </query>
     <isEtendoBase>true</isEtendoBase>
   </etpbic_query>
+  <etpbic_query id="5EFF10FFAD304714997F5FE314D322A3" identifier="Unit of Measure">
+    <id>5EFF10FFAD304714997F5FE314D322A3</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.66Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.66Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Unit of Measure</name>
+    <query>SELECT
+    u.c_uom_id AS "ID Unidad de Medida",
+    u.ad_client_id AS ClientID,
+    u.ad_org_id AS OrgID,
+    u.name AS "Unidad de Medida"
+FROM c_uom u</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="604158D31E294FE0AD1272697E859089" identifier="EDO Situation">
+    <id>604158D31E294FE0AD1272697E859089</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.65Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.65Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>EDO Situation</name>
+    <query>SELECT
+    ev.c_elementvalue_id AS "ID Cuenta",
+    ev.ad_client_id AS ClientID,
+    ev.ad_org_id AS OrgID,
+    ev.value,
+    ev.name,
+    ev.description,
+    tn.parent_id,
+    ev.elementlevel AS "Nivel del Elemento",
+    ev.accounttype AS "Tipo de Cuenta",
+    a.path,
+    a."SeqNo Path",
+    ROW_NUMBER() OVER (PARTITION BY a."ID Cuenta", a."parent_id" ORDER BY a."SeqNo Path") AS "OrgOrder",
+    a."Jerarquía"
+FROM c_elementvalue ev
+LEFT JOIN ad_treenode tn ON ev.c_elementvalue_id = tn.node_id
+LEFT JOIN ad_org ON ad_org.ad_org_id = ev.ad_org_id
+JOIN (
+    WITH RECURSIVE ancestor AS (
+        SELECT
+            ev.c_elementvalue_id AS "ID Cuenta",
+            ev.ad_client_id AS "ClientID",
+            ev.ad_org_id AS "OrgID",
+            ad_org.name AS "Organización",
+            ev.value,
+            ev.name,
+            ev.description,
+            tn.parent_id,
+            ev.elementlevel AS "Nivel del Elemento",
+            ev.accounttype AS "Tipo de Cuenta",
+            CAST(ev.value AS text) AS "path",
+            LPAD(CAST(tn.seqno AS text), 10, '0') AS "SeqNo Path"
+        FROM c_elementvalue ev
+        LEFT JOIN ad_treenode tn ON ev.c_elementvalue_id = tn.node_id
+        LEFT JOIN ad_org ON ad_org.ad_org_id = ev.ad_org_id
+        WHERE
+            tn.parent_id = '0'
+            AND ev.isactive = 'Y'
+            AND ad_org.isactive = 'Y'
+
+        UNION ALL
+
+        SELECT
+            ev.c_elementvalue_id AS "ID Cuenta",
+            ev.ad_client_id AS "ClientID",
+            ev.ad_org_id AS "OrgID",
+            ad_org.name AS "Organización",
+            ev.value,
+            ev.name,
+            ev.description,
+            tn.parent_id,
+            ev.elementlevel AS "Nivel del Elemento",
+            ev.accounttype AS "Tipo de Cuenta",
+            a.path || '/' || ev.value AS "path",
+            a."SeqNo Path" || '/' || LPAD(CAST(tn.seqno AS text), 10, '0') AS "SeqNo Path"
+        FROM c_elementvalue ev
+        JOIN ad_treenode tn ON ev.c_elementvalue_id = tn.node_id
+        JOIN ancestor a ON tn.parent_id = a."ID Cuenta"
+        LEFT JOIN ad_org ON ad_org.ad_org_id = ev.ad_org_id
+        WHERE
+            ev.isactive = 'Y'
+            AND ad_org.isactive = 'Y'
+    )
+    SELECT
+        "ID Cuenta",
+        "ClientID",
+        "OrgID",
+        path,
+        "SeqNo Path",
+        "parent_id",
+        ROW_NUMBER() OVER (ORDER BY "SeqNo Path") AS "Jerarquía"
+    FROM ancestor
+) AS a ON ev.c_elementvalue_id = a."ID Cuenta"
+ORDER BY a."SeqNo Path"</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
   <etpbic_query id="6176D54B3C3D4439A3AB8BD09B4B913E" identifier="Lines sent">
     <id>6176D54B3C3D4439A3AB8BD09B4B913E</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.15Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.65Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.15Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.65Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Lines sent</name>
     <query>
@@ -518,9 +921,9 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
   <etpbic_query id="8042D50AB7C7402D898277C2848C9CF7" identifier="Brands">
     <id>8042D50AB7C7402D898277C2848C9CF7</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.14Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.65Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.14Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.65Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Brands</name>
     <query>
@@ -541,9 +944,9 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
   <etpbic_query id="854CFACFDF8A41E79E4F6B3BF0B3AF41" identifier="Received lines">
     <id>854CFACFDF8A41E79E4F6B3BF0B3AF41</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.14Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.65Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.14Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.65Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Received lines</name>
     <query>
@@ -582,9 +985,9 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
   <etpbic_query id="AACC91CCB3CD4E209E38238C81466F0C" identifier="Products">
     <id>AACC91CCB3CD4E209E38238C81466F0C</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.14Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.65Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.14Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.65Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Products</name>
     <query>
@@ -609,9 +1012,9 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
   <etpbic_query id="BB47A95479644251971423D47287DFDE" identifier="References">
     <id>BB47A95479644251971423D47287DFDE</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.13Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.65Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.13Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.65Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>References</name>
     <query>
@@ -659,12 +1062,29 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
 	</query>
     <isEtendoBase>true</isEtendoBase>
   </etpbic_query>
+  <etpbic_query id="BD9215685D3249FB9C7B3C1FE788054E" identifier="Product Category">
+    <id>BD9215685D3249FB9C7B3C1FE788054E</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.64Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.64Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Product Category</name>
+    <query>SELECT
+    pc.m_product_category_id AS "ID de Categoría",
+    pc.ad_client_id AS ClientID,
+    pc.ad_org_id AS OrgID,
+    pc.name AS "Categoría de Producto"
+FROM m_product_Category pc
+WHERE pc.isactive = 'Y'</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
   <etpbic_query id="BF9358DD43F34580B01A4F66C705E074" identifier="Entity">
     <id>BF9358DD43F34580B01A4F66C705E074</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.13Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.64Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.13Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.64Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Entity</name>
     <query>
@@ -692,9 +1112,9 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
   <etpbic_query id="C1F0E82F5F06429A9342B58B76238E38" identifier="Fiscal periods">
     <id>C1F0E82F5F06429A9342B58B76238E38</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.12Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.64Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.12Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.64Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Fiscal periods</name>
     <query>
@@ -729,9 +1149,9 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
   <etpbic_query id="D05F6242044C4C97BE745AC2789700E4" identifier="Organizations">
     <id>D05F6242044C4C97BE745AC2789700E4</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.12Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.64Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.12Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.64Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Organizations</name>
     <query>
@@ -755,12 +1175,482 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
 	</query>
     <isEtendoBase>true</isEtendoBase>
   </etpbic_query>
+  <etpbic_query id="DB1523D42F614BF285312E7F62D5FD69" identifier="Employee">
+    <id>DB1523D42F614BF285312E7F62D5FD69</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.64Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.64Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Employee</name>
+    <query>SELECT
+    ad.ad_user_id AS "ID Vendedor",
+    ad.ad_client_id AS ClientID,
+    ad.ad_org_id AS OrgID,
+    cb.c_bpartner_id AS "ID Tercero",
+    ad.name AS "Nombre Vendedor"
+FROM ad_user ad
+LEFT JOIN c_bpartner cb ON cb.c_bpartner_id=ad.c_bpartner_id
+WHERE
+    cb.issalesrep='Y'</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="DCA160BF825C4AC09428C18129C70773" identifier="Payment Out">
+    <id>DCA160BF825C4AC09428C18129C70773</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.64Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.64Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Payment Out</name>
+    <query>SELECT
+    ps.fin_payment_schedule_id AS "ID Plan de pagos",
+    ci.ad_client_id AS ClientID,
+    ci.ad_org_id AS OrgID,
+    ci.documentno AS "Nro Documento",
+    ci.c_invoice_id AS "ID Factura",
+    TO_CHAR(ci.dateinvoiced, 'dd-mm-yyyy') AS "Fecha Factura",
+    ci.salesrep_id AS "ID Sales Rep",
+    adun.name AS "Sales rep del Cliente",
+    ci.c_bpartner_id AS "ID Tercero",
+    bp.name AS "Tercero",
+    mon.iso_code AS "Moneda Factura",
+    ci.fin_paymentmethod_id AS "ID Metodo de Pago",
+    fpm.name AS "Metodo de Pago",
+    ci.c_paymentterm_id AS "ID Condicion de Pago",
+    pmt.name AS "Condicion de Pago",
+    ps.expecteddate AS "Fecha Esperada",
+    ci.c_doctypetarget_id AS "ID Tipo de Documento",
+    doc.name AS "Tipo de Documento",
+    COALESCE(
+        (
+            SELECT
+                MAX(p.paymentdate)
+            FROM fin_payment_scheduledetail psd
+            LEFT JOIN fin_payment_detail pd ON psd.fin_payment_detail_id = pd.fin_payment_detail_id
+            LEFT JOIN fin_payment p ON pd.fin_payment_id = p.fin_payment_id
+            WHERE psd.fin_payment_schedule_invoice = ps.fin_payment_schedule_id
+        ),
+        NULL
+    ) AS "Fecha Último Pago",
+    COALESCE(
+        (
+            SELECT
+                CASE
+                    WHEN to_number(
+                        trunc(
+                            (
+                                CASE
+                                    WHEN max(ps.outstandingamt) = 0
+                                        THEN max(p.paymentdate)
+                                    ELSE now()
+                                END
+                            )
+                        ) - trunc(min(ps.expecteddate))
+                    ) &gt; 0
+                        THEN to_number(
+                            trunc(
+                                (
+                                    CASE
+                                        WHEN max(ps.outstandingamt) = 0
+                                            THEN max(p.paymentdate)
+                                        ELSE now()
+                                    END
+                                )
+                            ) - trunc(min(ps.expecteddate))
+                        )
+                    ELSE 0
+                END
+            FROM fin_payment_schedule ps_inner
+            LEFT JOIN fin_payment_scheduledetail psd_inner ON ps_inner.fin_payment_schedule_id = psd_inner.fin_payment_schedule_invoice
+            LEFT JOIN fin_payment_detail pd_inner ON pd_inner.fin_payment_detail_id = psd_inner.fin_payment_detail_id
+            LEFT JOIN fin_payment p ON p.fin_payment_id = pd_inner.fin_payment_id
+            WHERE ps_inner.fin_payment_schedule_id = ps.fin_payment_schedule_id
+            GROUP BY ps_inner.fin_payment_schedule_id
+        ),
+        0
+    ) AS "Días de Atraso",
+    REPLACE(COALESCE(ps.amount, 0)::text, '.', ',') AS "Importe Esperado",
+    REPLACE(
+        COALESCE(
+            (CASE WHEN doc.isreversal = 'Y' THEN -1 ELSE 1 END)
+            * CASE
+                WHEN mon.iso_code = 'USD'
+                    THEN COALESCE(ps.amount, 0)
+                ELSE COALESCE(
+                    etbiie_convert_doc_currency(
+                        ps.amount,
+                        mon.c_currency_id,
+                        '100',
+                        ci.dateinvoiced,
+                        ci.c_invoice_id,
+                        NULL,
+                        NULL,
+                        ci.ad_client_id
+                    ),
+                    0
+                )
+            END,
+            0
+        )::text,
+        '.',
+        ','
+    ) AS "Importe Esperado Moneda A",
+    REPLACE(
+        COALESCE(
+            (CASE WHEN doc.isreversal = 'Y' THEN -1 ELSE 1 END)
+            * CASE
+                WHEN mon.iso_code = 'EUR'
+                    THEN COALESCE(ps.amount, 0)
+                ELSE COALESCE(
+                    etbiie_convert_doc_currency(
+                        ps.amount,
+                        mon.c_currency_id,
+                        '102',
+                        ci.dateinvoiced,
+                        ci.c_invoice_id,
+                        NULL,
+                        NULL,
+                        ci.ad_client_id
+                    ),
+                    0
+                )
+            END,
+            0
+        )::text,
+        '.',
+        ','
+    ) AS "Importe Esperado Moneda B",
+    REPLACE(COALESCE(ps.paidamt, 0)::text, '.', ',') AS "Importe Cobrado",
+    REPLACE(
+        COALESCE(
+            (CASE WHEN doc.isreversal = 'Y' THEN -1 ELSE 1 END)
+            * CASE
+                WHEN mon.iso_code = 'USD'
+                    THEN COALESCE(ps.paidamt, 0)
+                ELSE COALESCE(
+                    etbiie_convert_doc_currency(
+                        ps.paidamt,
+                        mon.c_currency_id,
+                        '100',
+                        ci.dateinvoiced,
+                        ci.c_invoice_id,
+                        NULL,
+                        NULL,
+                        ci.ad_client_id
+                    ),
+                    0
+                )
+            END,
+            0
+        )::text,
+        '.',
+        ','
+    ) AS "Importe Cobrado Moneda A",
+    REPLACE(
+        COALESCE(
+            (CASE WHEN doc.isreversal = 'Y' THEN -1 ELSE 1 END)
+            * CASE
+                WHEN mon.iso_code = 'EUR'
+                    THEN COALESCE(ps.paidamt, 0)
+                ELSE COALESCE(
+                    etbiie_convert_doc_currency(
+                        ps.paidamt,
+                        mon.c_currency_id,
+                        '102',
+                        ci.dateinvoiced,
+                        ci.c_invoice_id,
+                        NULL,
+                        NULL,
+                        ci.ad_client_id
+                    ),
+                    0
+                )
+            END,
+            0
+        )::text,
+        '.',
+        ','
+    ) AS "Importe Cobrado Moneda B",
+    REPLACE(COALESCE(ps.outstandingamt, 0)::text, '.', ',') AS "Importe Pendiente",
+    REPLACE(
+        COALESCE(
+            (CASE WHEN doc.isreversal = 'Y' THEN -1 ELSE 1 END)
+            * CASE
+                WHEN mon.iso_code = 'USD'
+                    THEN COALESCE(ps.outstandingamt, 0)
+                ELSE COALESCE(
+                    etbiie_convert_doc_currency(
+                        ps.outstandingamt,
+                        mon.c_currency_id,
+                        '100',
+                        ci.dateinvoiced,
+                        ci.c_invoice_id,
+                        NULL,
+                        NULL,
+                        ci.ad_client_id
+                    ),
+                    0
+                )
+            END,
+            0
+        )::text,
+        '.',
+        ','
+    ) AS "Importe Pendiente Moneda A",
+    REPLACE(
+        COALESCE(
+            (CASE WHEN doc.isreversal = 'Y' THEN -1 ELSE 1 END)
+            * CASE
+                WHEN mon.iso_code = 'EUR'
+                    THEN COALESCE(ps.outstandingamt, 0)
+                ELSE COALESCE(
+                    etbiie_convert_doc_currency(
+                        ps.outstandingamt,
+                        mon.c_currency_id,
+                        '102',
+                        ci.dateinvoiced,
+                        ci.c_invoice_id,
+                        NULL,
+                        NULL,
+                        ci.ad_client_id
+                    ),
+                    0
+                )
+            END,
+            0
+        )::text,
+        '.',
+        ','
+    ) AS "Importe Pendiente Moneda B"
+FROM c_invoice ci
+LEFT JOIN c_bpartner bp ON bp.c_bpartner_id = ci.c_bpartner_id
+LEFT JOIN c_paymentterm ON ci.c_paymentterm_id = c_paymentterm.c_paymentterm_id
+LEFT JOIN fin_paymentmethod fpm ON ci.fin_paymentmethod_id = fpm.fin_paymentmethod_id
+LEFT JOIN ad_org org ON org.ad_org_id = ci.ad_org_id
+LEFT JOIN c_currency mon ON mon.c_currency_id = ci.c_currency_id
+LEFT JOIN fin_payment_schedule ps ON ps.c_invoice_id = ci.c_invoice_id
+LEFT JOIN c_paymentterm pmt ON ci.c_paymentterm_id = pmt.c_paymentterm_id
+LEFT JOIN c_doctype doc ON ci.c_doctypetarget_id = doc.c_doctype_id
+LEFT JOIN ad_user adun ON adun.ad_user_id = ci.salesrep_id
+WHERE
+    ci.docstatus IN ('CO', 'CL')
+    AND ci.issotrx = 'N'
+    AND ci.isactive = 'Y'
+    AND org.isactive = 'Y'
+    AND ci.dateinvoiced &gt;= '2018-01-01'
+    AND COALESCE(
+        (
+            SELECT MAX(p.paymentdate)
+            FROM fin_payment_scheduledetail psd
+            LEFT JOIN fin_payment_detail pd ON psd.fin_payment_detail_id = pd.fin_payment_detail_id
+            LEFT JOIN fin_payment p ON pd.fin_payment_id = p.fin_payment_id
+            WHERE
+                psd.fin_payment_schedule_invoice = ps.fin_payment_schedule_id
+        ),
+        NULL
+    ) IS NOT NULL
+GROUP BY
+    ps.fin_payment_schedule_id,
+    ci.c_invoice_id,
+    ci.ad_client_id,
+    ci.ad_org_id,
+    ci.documentno,
+    TO_CHAR(ci.dateinvoiced, 'dd-mm-yyyy'),
+    ci.salesrep_id,
+    adun.name,
+    ci.c_bpartner_id,
+    bp.name,
+    mon.iso_code,
+    ci.fin_paymentmethod_id,
+    fpm.name,
+    ci.c_paymentterm_id,
+    pmt.name,
+    ps.expecteddate,
+    ci.c_doctypetarget_id,
+    doc.name,
+    doc.isreversal,
+    REPLACE(COALESCE(ps.amount, 0)::text, '.', ','),
+    REPLACE(
+        COALESCE(
+            (CASE WHEN doc.isreversal = 'Y' THEN -1 ELSE 1 END)
+            * CASE
+                WHEN mon.iso_code = 'USD'
+                    THEN COALESCE(ps.amount, 0)
+                ELSE COALESCE(
+                    etbiie_convert_doc_currency(
+                        ps.amount,
+                        mon.c_currency_id,
+                        '100',
+                        ci.dateinvoiced,
+                        ci.c_invoice_id,
+                        NULL,
+                        NULL,
+                        ci.ad_client_id
+                    ),
+                    0
+                )
+            END,
+            0
+        )::text,
+        '.',
+        ','
+    ),
+    REPLACE(
+        COALESCE(
+            (CASE WHEN doc.isreversal = 'Y' THEN -1 ELSE 1 END)
+            * CASE
+                WHEN mon.iso_code = 'EUR'
+                    THEN COALESCE(ps.amount, 0)
+                ELSE COALESCE(
+                    etbiie_convert_doc_currency(
+                        ps.amount,
+                        mon.c_currency_id,
+                        '102',
+                        ci.dateinvoiced,
+                        ci.c_invoice_id,
+                        NULL,
+                        NULL,
+                        ci.ad_client_id
+                    ),
+                    0
+                )
+            END,
+            0
+        )::text,
+        '.',
+        ','
+    ),
+    REPLACE(
+        COALESCE(
+            (CASE WHEN doc.isreversal = 'Y' THEN -1 ELSE 1 END)
+            * CASE
+                WHEN mon.iso_code = 'EUR'
+                    THEN COALESCE(ps.paidamt, 0)
+                ELSE COALESCE(
+                    etbiie_convert_doc_currency(
+                        ps.paidamt,
+                        mon.c_currency_id,
+                        '102',
+                        ci.dateinvoiced,
+                        ci.c_invoice_id,
+                        NULL,
+                        NULL,
+                        ci.ad_client_id
+                    ),
+                    0
+                )
+            END,
+            0
+        )::text,
+        '.',
+        ','
+    ),
+    REPLACE(
+        COALESCE(
+            (CASE WHEN doc.isreversal = 'Y' THEN -1 ELSE 1 END)
+            * CASE
+                WHEN mon.iso_code = 'USD'
+                    THEN COALESCE(ps.paidamt, 0)
+                ELSE COALESCE(
+                    etbiie_convert_doc_currency(
+                        ps.paidamt,
+                        mon.c_currency_id,
+                        '100',
+                        ci.dateinvoiced,
+                        ci.c_invoice_id,
+                        NULL,
+                        NULL,
+                        ci.ad_client_id
+                    ),
+                    0
+                )
+            END,
+            0
+        )::text,
+        '.',
+        ','
+    ),
+    REPLACE(COALESCE(ps.outstandingamt, 0)::text, '.', ','),
+    REPLACE(
+        COALESCE(
+            (CASE WHEN doc.isreversal = 'Y' THEN -1 ELSE 1 END)
+            * CASE
+                WHEN mon.iso_code = 'USD'
+                    THEN COALESCE(ps.outstandingamt, 0)
+                ELSE COALESCE(
+                    etbiie_convert_doc_currency(
+                        ps.outstandingamt,
+                        mon.c_currency_id,
+                        '100',
+                        ci.dateinvoiced,
+                        ci.c_invoice_id,
+                        NULL,
+                        NULL,
+                        ci.ad_client_id
+                    ),
+                    0
+                )
+            END,
+            0
+        )::text,
+        '.',
+        ','
+    ),
+    REPLACE(
+        COALESCE(
+            (CASE WHEN doc.isreversal = 'Y' THEN -1 ELSE 1 END)
+            * CASE
+                WHEN mon.iso_code = 'EUR'
+                    THEN COALESCE(ps.outstandingamt, 0)
+                ELSE COALESCE(
+                    etbiie_convert_doc_currency(
+                        ps.outstandingamt,
+                        mon.c_currency_id,
+                        '102',
+                        ci.dateinvoiced,
+                        ci.c_invoice_id,
+                        NULL,
+                        NULL,
+                        ci.ad_client_id
+                    ),
+                    0
+                )
+            END,
+            0
+        )::text,
+        '.',
+        ','
+    )</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="E0AC8056FAF64C4F8BC14DABE27D3AB3" identifier="Account Tree">
+    <id>E0AC8056FAF64C4F8BC14DABE27D3AB3</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.64Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.64Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Account Tree</name>
+    <query>SELECT
+    ce.c_elementvalue_id AS "ID Cuenta",
+    ce.ad_client_id AS ClientID,
+    ce.ad_org_id AS OrgID,
+    ce.Value AS "Codigo Jerarquia",
+    ce.name AS "Cuenta",
+    ce.elementlevel AS "Nivel del Elemento",
+    ce.accounttype AS "Tipo de Cuenta",
+    ce.c_element_id AS "ID Elemento",
+    ce.accountsign AS "Naturaleza Cuenta"
+FROM c_elementvalue ce</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
   <etpbic_query id="E372613D817A4370998C514795CC3902" identifier="Unbilled purchase order lines">
     <id>E372613D817A4370998C514795CC3902</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.11Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.64Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.11Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.64Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Unbilled purchase order lines</name>
     <query>
@@ -838,9 +1728,9 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
   <etpbic_query id="F02D006C9F65492CB005FCB1DE8E0F90" identifier="Warehouses">
     <id>F02D006C9F65492CB005FCB1DE8E0F90</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.11Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.63Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.11Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.63Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>Warehouses</name>
     <query>
@@ -869,12 +1759,60 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
 	</query>
     <isEtendoBase>true</isEtendoBase>
   </etpbic_query>
+  <etpbic_query id="F0A6D8D0608C4A40AD4788F7CC8ECB8D" identifier="Stock">
+    <id>F0A6D8D0608C4A40AD4788F7CC8ECB8D</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.63Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.63Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Stock</name>
+    <query>SELECT
+    war.m_warehouse_id AS "ID Almacen",
+    war.ad_client_id AS ClientID,
+    war.ad_org_id AS OrgID,
+    CURRENT_DATE - 1 AS "Fecha",
+    war.name AS "Almacen",
+    p.m_product_category_id AS "ID Categoria Producto",
+    prodcat.name AS "Categoria Producto",
+    p.m_product_id AS "ID Producto",
+    p.name AS "Nombre Producto",
+    uom.name AS "Unidad de Medida",
+    uom.c_uom_id AS "ID Unidad de Medida",
+    REPLACE(COALESCE(store.qtyonhand, 0)::text, '.', ',') AS "Stock Real",
+    loc.value AS "Hueco",
+    loc.m_locator_id AS "ID Hueco",
+    REPLACE(COALESCE(ma.description::text, '') , ',' , '-') AS "atributo",
+    REPLACE(COALESCE(mcos_last.cost, 0)::text, '.', ',') AS "Costo Unitario",
+    cur.iso_code AS "Moneda Costo"
+FROM m_warehouse war
+INNER JOIN ad_org org ON org.ad_org_id = war.ad_org_id
+INNER JOIN m_locator loc ON loc.m_warehouse_id = war.m_warehouse_id
+INNER JOIN m_storage_detail store ON loc.m_locator_id = store.m_locator_id
+LEFT JOIN m_attributesetinstance ma ON store.m_attributesetinstance_id = ma.m_attributesetinstance_id
+INNER JOIN m_product p ON store.m_product_id = p.m_product_id
+INNER JOIN c_uom uom ON uom.c_uom_id = p.c_uom_id
+INNER JOIN m_product_category prodcat ON prodcat.m_product_category_id = p.m_product_category_id
+LEFT JOIN LATERAL (
+    SELECT mcos.*
+    FROM m_costing mcos
+    WHERE mcos.m_product_id = p.m_product_id
+    ORDER BY mcos.datefrom DESC
+    LIMIT 1
+) mcos_last ON true
+LEFT JOIN c_currency cur ON cur.c_currency_id = mcos_last.c_currency_id
+WHERE
+    store.qtyonhand &gt; 0
+    AND org.isactive = 'Y'
+ORDER BY war.name, p.name</query>
+    <isEtendoBase>false</isEtendoBase>
+  </etpbic_query>
   <etpbic_query id="F75838F8E93941EA8F85775EC5AF5FCB" identifier="unbilled sales order lines">
     <id>F75838F8E93941EA8F85775EC5AF5FCB</id>
     <active>true</active>
-    <creationDate transient="true">2023-05-10T13:57:26.10Z</creationDate>
+    <creationDate transient="true">2026-01-27T20:23:00.63Z</creationDate>
     <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
-    <updated transient="true">2023-05-10T13:57:26.10Z</updated>
+    <updated transient="true">2026-01-27T20:23:00.63Z</updated>
     <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
     <name>unbilled sales order lines</name>
     <query>
@@ -946,5 +1884,23 @@ WHERE c_invoice.docstatus in ('CO', 'CL', 'VO')
 
 </query>
     <isEtendoBase>true</isEtendoBase>
+  </etpbic_query>
+  <etpbic_query id="FD402AFAF3E34AAEB803A0C4F80C6F85" identifier="Business Partner">
+    <id>FD402AFAF3E34AAEB803A0C4F80C6F85</id>
+    <active>true</active>
+    <creationDate transient="true">2026-01-27T20:23:00.62Z</creationDate>
+    <createdBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <updated transient="true">2026-01-27T20:23:00.62Z</updated>
+    <updatedBy transient="true" id="100" entity-name="ADUser" identifier="Admin"/>
+    <name>Business Partner</name>
+    <query>SELECT
+    cbp.c_bpartner_id AS "ID Tercero",
+    cbp.ad_client_id AS ClientID,
+    cbp.ad_org_id AS OrgID,
+    cbp.name AS "Tercero",
+    cbp.value AS "Código Tercero"
+FROM c_bpartner cbp
+WHERE cbp.isactive='Y'</query>
+    <isEtendoBase>false</isEtendoBase>
   </etpbic_query>
 </ob:Openbravo>
