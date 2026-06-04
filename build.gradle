@@ -10,7 +10,7 @@ group          = "com.etendoerp"
 version        = "3.0.0"
 description    = "Base Queries for EtendoBI"
 ext.artifact   = "powerbi.queries"
-ext.repository = "https://maven.pkg.github.com/etendosoftware/com.etendoerp.etendobi.extensions"
+ext.repository = "https://repo.futit.cloud/repository/maven-snapshots"
 
 configurations {
     moduleDependencyContainer
@@ -27,7 +27,7 @@ publishing {
     }
     repositories {
         maven {
-            url "https://maven.pkg.github.com/etendosoftware/com.etendoerp.etendobi.extensions"
+            url "https://repo.futit.cloud/repository/maven-snapshots"
         }
     }
 }
@@ -35,7 +35,7 @@ publishing {
 repositories {
     mavenCentral()
     maven {
-        url "https://maven.pkg.github.com/etendosoftware/com.etendoerp.etendobi.extensions"
+        url "https://repo.futit.cloud/repository/maven-snapshots"
     }
 }
 
@@ -46,5 +46,5 @@ repositories {
 dependencies {
     implementation('com.etendoerp:integration.powerbi:3.0.0')
 
-    implementation('com.etendoerp.platform:etendo-core:[26.1.0,26.2.0)')
+    implementation('com.etendoerp.platform:etendo-core:[27.1.0,27.2.0)')
 }
